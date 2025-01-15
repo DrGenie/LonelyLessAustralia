@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>LonelyLessAustralia Decision Aid Tool</title>
   <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- jsPDF for PDF generation -->
@@ -12,36 +13,49 @@
 </head>
 <body>
 <div class="container">
-
   <header>
     <h1>LonelyLessAustralia Decision Aid Tool</h1>
   </header>
 
-  <!-- Tabs Navigation -->
+  <!-- Tabs for a concise interface -->
   <div class="tabs">
-    <button class="tablink active" onclick="openTab(event, 'tab1')">Main Inputs</button>
-    <button class="tablink" onclick="openTab(event, 'tab2')">Scenario Comparison</button>
-    <button class="tablink" onclick="openTab(event, 'tab3')">Generate PDF</button>
+    <button class="tablink active" onclick="openTab(event, 'introTab')">Introduction</button>
+    <button class="tablink" onclick="openTab(event, 'inputsTab')">Inputs</button>
+    <button class="tablink" onclick="openTab(event, 'scenariosTab')">Scenarios</button>
   </div>
 
-  <!-- TAB 1: MAIN INPUTS -->
-  <section id="tab1" class="tabcontent" style="display: block;">
-    
-    <section class="introduction">
+  <!-- INTRODUCTION TAB -->
+  <section id="introTab" class="tabcontent" style="display: block;">
+    <div class="intro-box">
       <p>
-        Loneliness affects over five million Australians, particularly older adults, and can pose significant health and economic burdens. 
-        This online decision aid tool leverages discrete choice experiment data to show how older adults value different components of support programmes. 
-        Adjust the attributes below to see how they influence the probability of uptake. Then, click “Save Scenario” to store your configuration, or 
-        “View Results” to see immediate calculations (including costs, benefits, cost-benefit analysis, and willingness to pay).
+        Loneliness has been identified as a major concern among older adults in Australia, 
+        contributing to adverse health and economic outcomes. This decision aid tool employs 
+        discrete choice experiment (DCE) results to demonstrate how different attributes of 
+        support programmes influence older adults' choices. 
       </p>
-    </section>
+      <p>
+        Adjust the attributes under the <strong>Inputs</strong> tab, then view your predicted 
+        probability of uptake, cost-benefit outcomes, and willingness-to-pay (WTP) estimates 
+        in a new window. You can also save multiple <strong>Scenarios</strong> to compare them 
+        side by side. 
+      </p>
+      <p>
+        Once the results are shown, you can download a PDF that includes all charts and tables. 
+        The tool aims to provide an intuitive way to explore how older adults’ preferences 
+        vary by loneliness category (Not Lonely, Moderately Lonely, and Severely Lonely), based 
+        on the well-established De Jong Gierveld Loneliness Scale.
+      </p>
+    </div>
+  </section>
 
-    <!-- MAIN FORM -->
+  <!-- INPUTS TAB -->
+  <section id="inputsTab" class="tabcontent">
+    <h2>Select Programme Attributes</h2>
     <form id="decisionForm">
       <div class="form-grid">
-
-        <!-- State Selection & Cost-of-Living Adjustment -->
-        <div class="form-block">
+        
+        <!-- 1) State + Cost of Living? -->
+        <div class="form-item">
           <label for="state_select">State:</label>
           <select id="state_select">
             <option value="">-- None --</option>
@@ -54,7 +68,7 @@
             <option value="ACT">Australian Capital Territory (ACT)</option>
             <option value="NT">Northern Territory (NT)</option>
           </select>
-          <br /><br />
+          <br/>
           <label for="adjust_costs">Adjust for Cost of Living?</label>
           <select id="adjust_costs">
             <option value="no">No</option>
@@ -62,81 +76,72 @@
           </select>
         </div>
 
-        <!-- Cost Slider -->
-        <div class="form-block">
-          <label for="cost_slider">Cost per Session (AUD): 
-            <span id="cost_label">50</span>
-          </label>
-          <input type="range" id="cost_slider" min="0" max="100" step="1" value="50" oninput="updateCostLabel(this.value)" />
+        <!-- 2) Cost slider -->
+        <div class="form-item">
+          <label for="cost_slider">Cost per Session (AUD): <span id="cost_label">50</span></label>
+          <input 
+            type="range" 
+            id="cost_slider" 
+            min="0" max="100" step="1" 
+            value="50" 
+            oninput="updateCostLabel(this.value)"
+          />
         </div>
 
-        <!-- Accessibility -->
-        <div class="form-block">
-          <label for="local_cb">Local Area (up to 12 km):</label>
-          <input type="checkbox" id="local_cb" />
-          <br />
-          <label for="wider_cb">Wider Community (50+ km):</label>
-          <input type="checkbox" id="wider_cb" />
+        <!-- 3) Accessibility -->
+        <div class="form-item">
+          <label><input type="checkbox" id="local_cb" />Local Area (12 km)</label>
+          <br/>
+          <label><input type="checkbox" id="wider_cb" />Wider Community (50+ km)</label>
         </div>
 
-        <!-- Frequency -->
-        <div class="form-block">
-          <label for="weekly_cb">Weekly:</label>
-          <input type="checkbox" id="weekly_cb" />
-          <br />
-          <label for="monthly_cb">Monthly:</label>
-          <input type="checkbox" id="monthly_cb" />
+        <!-- 4) Frequency -->
+        <div class="form-item">
+          <label><input type="checkbox" id="weekly_cb" />Weekly</label>
+          <br/>
+          <label><input type="checkbox" id="monthly_cb" />Monthly</label>
         </div>
 
-        <!-- Method -->
-        <div class="form-block">
-          <label for="virtual_cb">Virtual Only:</label>
-          <input type="checkbox" id="virtual_cb" />
-          <br />
-          <label for="hybrid_cb">Hybrid (in-person & virtual):</label>
-          <input type="checkbox" id="hybrid_cb" />
+        <!-- 5) Method -->
+        <div class="form-item">
+          <label><input type="checkbox" id="virtual_cb" />Virtual Only</label>
+          <br/>
+          <label><input type="checkbox" id="hybrid_cb" />Hybrid (In-Person & Virtual)</label>
         </div>
 
-        <!-- Duration -->
-        <div class="form-block">
-          <label for="twoH_cb">2-Hour Session:</label>
-          <input type="checkbox" id="twoH_cb" />
-          <br />
-          <label for="fourH_cb">4-Hour Session:</label>
-          <input type="checkbox" id="fourH_cb" />
+        <!-- 6) Duration -->
+        <div class="form-item">
+          <label><input type="checkbox" id="twoH_cb" />2-Hour Session</label>
+          <br/>
+          <label><input type="checkbox" id="fourH_cb" />4-Hour Session</label>
         </div>
 
-        <!-- Programme Type -->
-        <div class="form-block">
-          <label for="comm_cb">Community Engagement:</label>
-          <input type="checkbox" id="comm_cb" />
-          <br />
-          <label for="psych_cb">Psychological Counselling:</label>
-          <input type="checkbox" id="psych_cb" />
-          <br />
-          <label for="vr_cb">Virtual Reality:</label>
-          <input type="checkbox" id="vr_cb" />
+        <!-- 7) Programme Type -->
+        <div class="form-item">
+          <label><input type="checkbox" id="comm_cb" />Community Engagement</label>
+          <br/>
+          <label><input type="checkbox" id="psych_cb" />Psychological Counselling</label>
+          <br/>
+          <label><input type="checkbox" id="vr_cb" />Virtual Reality</label>
         </div>
       </div>
 
-      <!-- Control Buttons -->
       <div class="buttons-row">
         <button type="button" onclick="saveScenario()">Save Scenario</button>
         <button type="button" onclick="openResultsWindow()">View Results</button>
       </div>
     </form>
-    
   </section>
 
-  <!-- TAB 2: SCENARIO COMPARISON -->
-  <section id="tab2" class="tabcontent">
-    <h2>Scenario Comparison</h2>
-    <p>Below are your saved scenarios. Click “Compare Now” to open them in a new window for side-by-side analysis.</p>
+  <!-- SCENARIOS TAB -->
+  <section id="scenariosTab" class="tabcontent">
+    <h2>Saved Scenarios</h2>
+    <p>Compare multiple scenarios side by side. Click the button below to open a new window with all the scenarios and results.</p>
     <table id="scenarioTable">
       <thead>
         <tr>
           <th>Scenario Name</th>
-          <th>Attributes Selected</th>
+          <th>Selected Attributes</th>
           <th>State</th>
           <th>Cost Adjust?</th>
           <th>Cost (AUD)</th>
@@ -144,22 +149,15 @@
       </thead>
       <tbody></tbody>
     </table>
-    <button type="button" onclick="openComparisonWindow()">Compare Now</button>
+    <div class="buttons-row">
+      <button type="button" onclick="openComparisonWindow()">Compare Scenarios</button>
+    </div>
   </section>
 
-  <!-- TAB 3: GENERATE PDF -->
-  <section id="tab3" class="tabcontent">
-    <h2>Generate Comprehensive PDF</h2>
-    <p>After you open the “View Results” or “Compare Now” windows, you may generate a PDF with charts and data from there. 
-       This step ensures the dynamic charts can be captured. Once you open the results window, you’ll see a “Download PDF” button.</p>
-    <p>Go to the results or comparison window and click “Download PDF” to finalise your report with embedded charts.</p>
-  </section>
-
-  <!-- Footer / End -->
+  <!-- FOOTER -->
   <footer>
     <p>&copy; 2025 LonelyLessAustralia. All Rights Reserved.</p>
   </footer>
 </div>
-<script src="script.js"></script>
 </body>
 </html>
