@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>LonelyLessAustralia Decision Aid Tool</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -12,43 +12,43 @@
     <h1>LonelyLessAustralia Decision Aid Tool</h1>
   </header>
 
-  <!-- TAB BUTTONS -->
+  <!-- Tab Buttons -->
   <div class="tabs">
     <button class="tablink active" onclick="openTab('introTab', this)">Introduction</button>
     <button class="tablink" onclick="openTab('inputsTab', this)">Inputs</button>
     <button class="tablink" onclick="openTab('scenariosTab', this)">Scenarios</button>
   </div>
 
-  <!-- TAB CONTENT: INTRODUCTION -->
+  <!-- Tab Content: Introduction -->
   <div id="introTab" class="tabcontent" style="display: block;">
     <div class="intro-box">
       <p>
-        Loneliness has been recognised as a major concern among older adults in Australia, 
-        contributing to adverse health, social, and economic consequences. This tool demonstrates 
-        how key programme attributes—from cost levels to service delivery methods—can influence 
-        uptake decisions, drawing on insights from discrete choice experiments (DCEs).
+        Loneliness is increasingly acknowledged as a major issue affecting older adults in Australia, 
+        resulting in significant health, social, and economic challenges. This tool showcases how 
+        various programme features—cost, delivery method, and more—can shape older adults’ uptake 
+        preferences, building on discrete choice experiment (DCE) findings.
       </p>
       <p>
-        Use the menu above to navigate:
+        Use the tabs above to navigate:
       </p>
       <ul>
-        <li><strong>Introduction</strong> – this overview page.</li>
-        <li><strong>Inputs</strong> – select or configure attributes for your scenario.</li>
-        <li><strong>Scenarios</strong> – view and compare your saved scenarios.</li>
+        <li><strong>Introduction</strong>: This overview page.</li>
+        <li><strong>Inputs</strong>: Configure or select attributes for your scenario.</li>
+        <li><strong>Scenarios</strong>: Save or compare multiple scenarios side by side.</li>
       </ul>
       <p>
-        Once you have selected attributes in the <strong>Inputs</strong> tab, you can generate 
-        predicted probabilities or cost-benefit estimates in a new window, download PDF reports, 
-        and explore how preferences differ by loneliness category.
+        After selecting attributes in the <strong>Inputs</strong> tab, you can generate 
+        predicted probabilities or cost-benefit outputs in a new window, download PDF 
+        reports, and explore how preferences differ by loneliness category (Not Lonely, 
+        Moderately Lonely, Severely Lonely).
       </p>
     </div>
   </div>
 
-  <!-- TAB CONTENT: INPUTS -->
+  <!-- Tab Content: Inputs -->
   <div id="inputsTab" class="tabcontent">
     <h2>Programme Inputs</h2>
-    <p>Select or configure the programme attributes you wish to test.</p>
-    <!-- Example inputs: expand or replace as you wish -->
+    <p>Select or configure the programme attributes below.</p>
     <div class="example-box">
       <label for="exampleSelect">Cost Level:</label>
       <select id="exampleSelect">
@@ -66,18 +66,16 @@
         <input type="checkbox" id="virtualCheck" /> Virtual Delivery
       </label>
     </div>
-    <!-- Add your real attribute inputs/controls here -->
   </div>
 
-  <!-- TAB CONTENT: SCENARIOS -->
+  <!-- Tab Content: Scenarios -->
   <div id="scenariosTab" class="tabcontent">
     <h2>Scenarios</h2>
-    <p>Once you have saved or generated multiple scenarios, you can compare them here.</p>
+    <p>Here you can store or compare multiple scenarios once you've created them.</p>
     <div class="example-box">
       <button>Save Current Scenario</button>
-      <button>Compare All</button>
+      <button>Compare All Scenarios</button>
     </div>
-    <!-- Add your real scenario-logic, tables, or comparison UI here -->
   </div>
 
   <footer>
@@ -85,7 +83,7 @@
   </footer>
 </div>
 
-<!-- JavaScript file at the bottom -->
+<!-- Link to our script -->
 <script src="script.js"></script>
 </body>
 </html>
