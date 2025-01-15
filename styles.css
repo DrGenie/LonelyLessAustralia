@@ -1,4 +1,4 @@
-/* Basic Body Reset & Container */
+/* Overall Container */
 body {
   margin: 0;
   padding: 0;
@@ -7,7 +7,7 @@ body {
 }
 .container {
   width: 95%;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 20px auto;
   background: #fff;
   border-radius: 6px;
@@ -45,10 +45,13 @@ header h1 {
   color: #fff;
 }
 
-/* Tab Content */
+/* Tabcontent Hidden by Default */
 .tabcontent {
-  display: none; /* Hidden by default; revealed by JS */
-  padding: 10px 0;
+  display: none;
+  margin-top: 10px;
+}
+.tabcontent h2 {
+  margin-top: 0;
 }
 
 /* Intro Box */
@@ -58,16 +61,69 @@ header h1 {
   border-left: 5px solid #3498db;
   border-radius: 4px;
   font-size: 1.1em;
-  line-height: 1.5em;
+  line-height: 1.6em;
 }
 
-/* Example Boxes */
-.example-box {
+/* Form Grid */
+.form-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin-top: 20px;
+}
+.form-item {
   background: #fafafa;
-  padding: 10px;
-  margin: 20px 0;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  padding: 10px;
+}
+.form-item label {
+  font-weight: bold;
+  margin-top: 6px;
+  display: inline-block;
+  color: #2c3e50;
+}
+
+/* Buttons Row */
+.buttons-row {
+  margin: 20px 0;
+  text-align: center;
+}
+.buttons-row button {
+  background-color: #27ae60;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 10px;
+  font-size: 1em;
+}
+.buttons-row button:hover {
+  background-color: #1e8449;
+}
+
+/* Table for Scenarios */
+#scenarioTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+#scenarioTable th, #scenarioTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+#scenarioTable th {
+  background: #2980b9;
+  color: #fff;
+  font-weight: normal;
+}
+
+/* Range Slider Label */
+#costLabel {
+  color: #e74c3c;
+  font-weight: bold;
 }
 
 /* Footer */
