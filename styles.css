@@ -45,7 +45,7 @@ header h1 {
   color: #fff;
 }
 
-/* Tabcontent: all hidden by default; shown by JS */
+/* Tabcontent hidden by default; shown by JavaScript */
 .tabcontent {
   display: none;
   margin-top: 10px;
@@ -109,7 +109,8 @@ header h1 {
   border-collapse: collapse;
   margin-top: 20px;
 }
-#scenarioTable th, #scenarioTable td {
+#scenarioTable th, 
+#scenarioTable td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
@@ -139,6 +140,13 @@ header h1 {
 .wtpTable th {
   background: #2980b9;
   color: #fff;
+}
+
+/* CBA Chart in Costs Tab */
+#cbaChart {
+  border: 1px solid #ccc;
+  background: #fafafa;
+  border-radius: 6px;
 }
 
 /* Footer */
