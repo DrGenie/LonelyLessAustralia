@@ -22,7 +22,7 @@
     <button class="tablink" onclick="openTab('attributesTab', this)">Attributes</button>
     <button class="tablink" onclick="openTab('inputsTab', this)">Inputs</button>
     <button class="tablink" onclick="openTab('wtpTab', this)">WTP Results</button>
-    <button class="tablink" onclick="openTab('probChartsTab', this)">Probability Plots</button>
+    <button class="tablink" onclick="openTab('probChartsTab', this)">Program Uptake Probability</button>
     <button class="tablink" onclick="openTab('costsTab', this)">Costs & Benefits</button>
     <button class="tablink" onclick="openTab('scenariosTab', this)">Scenarios</button>
   </div>
@@ -32,30 +32,30 @@
     <div class="intro-box">
       <p>
         Loneliness affects over five million Australians, especially older adults, resulting 
-        in serious health and economic burdens. This decision aid tool builds on a discrete 
-        choice experiment (DCE) that identified older adults’ preferences for programmes 
-        aimed at reducing loneliness in Australia. Using these DCE estimates, the tool 
-        predicts uptake probabilities for different programme packages, enabling personalised 
+        in serious health and economic burdens. This decision aid tool is based on a discrete 
+        choice experiment (DCE) that identified older adults’ preferences for programmes aimed 
+        at reducing loneliness in Australia. By incorporating these DCE estimates, the tool 
+        predicts uptake probabilities for various programme packages, offering personalised 
         services based on the factors older adults prioritise when seeking support.
       </p>
       <p>
-        The loneliness categories applied in this study come from the 
-        <em>De Jong Gierveld Loneliness Scale</em> (11-item version), which measures both 
-        emotional and social loneliness. Summing these yields a total loneliness score, 
-        subsequently classified into three levels—Not Lonely, Moderately Lonely, and Severely 
-        Lonely—for comparing preferences across varying severity.
+        The loneliness categories used in this study were derived from the 
+        <em>De Jong Gierveld Loneliness Scale</em> (11-item version), which measures emotional 
+        and social loneliness. Summing these yields a total loneliness score, subsequently 
+        classified into three levels—Not Lonely, Moderately Lonely, and Severely Lonely—for 
+        more nuanced comparisons across different severity categories.
       </p>
       <p>
-        Use the tabs above to explore:
+        Please use the tabs above to navigate:
       </p>
       <ul>
-        <li><strong>Instructions</strong> – Step-by-step guidance for using the tool.</li>
-        <li><strong>Attributes</strong> – Summaries of each DCE attribute.</li>
-        <li><strong>Inputs</strong> – Select scenario attributes and see uptake predictions.</li>
-        <li><strong>WTP Results</strong> – View WTP bar plots for the main model and by loneliness category.</li>
-        <li><strong>Probability Plots</strong> – Visualise predicted uptake probabilities by loneliness category.</li>
-        <li><strong>Costs & Benefits</strong> – Explore cost structures and benefits (A\$5,000 per 1% improvement).</li>
-        <li><strong>Scenarios</strong> – Save configurations, compare them with advanced charts, or generate PDFs.</li>
+        <li><strong>Instructions</strong> – Guidance on using the tool step by step.</li>
+        <li><strong>Attributes</strong> – Summaries of each programme attribute in the DCE.</li>
+        <li><strong>Inputs</strong> – Define or configure your scenario attributes.</li>
+        <li><strong>WTP Results</strong> – Visualise WTP bar charts for the main model and loneliness categories.</li>
+        <li><strong>Program Uptake Probability</strong> – See bar charts illustrating predicted programme uptake.</li>
+        <li><strong>Costs & Benefits</strong> – A\$5,000 per 1% improvement assumption, cost-of-living multipliers, etc.</li>
+        <li><strong>Scenarios</strong> – Save multiple configurations, compare them with advanced charts, or export PDFs.</li>
       </ul>
     </div>
   </div>
@@ -64,48 +64,46 @@
   <div id="instructionsTab" class="tabcontent">
     <h2>How to Use This Tool</h2>
     <p>
-      1. Go to the <strong>Attributes</strong> tab to learn about each programme attribute.  
+      1. Read about <strong>Attributes</strong> to understand each dimension of the programme.
     </p>
     <p>
-      2. In the <strong>Inputs</strong> tab, select a state (if any), cost-of-living adjustments, 
-      cost per session, accessibility, frequency, method of interaction, session duration, and 
-      type of support. These reflect your desired scenario.
+      2. In <strong>Inputs</strong>, select a state (if any), cost-of-living, cost per session, 
+      accessibility, frequency, method, duration, and type of support. 
     </p>
     <p>
-      3. Click “Calculate & View Results” to open a new window showing advanced cost-benefit 
-      charts, predicted uptake probabilities, and optional PDF exports.
+      3. Click “Calculate &amp; View Results” to open a detailed results window with advanced 
+      cost-benefit charts, predicted uptake probabilities, optional PDF exports, etc.
     </p>
     <p>
-      4. If you wish, save the scenario under the <strong>Scenarios</strong> tab, then compare 
-      multiple scenarios side by side.
+      4. Save your scenario under the <strong>Scenarios</strong> tab to compare multiple 
+      configurations side by side.
     </p>
     <p>
-      5. Go to <strong>WTP Results</strong> to see bar plots illustrating how much individuals 
-      would pay for each attribute (main model + by loneliness category).
+      5. The <strong>WTP Results</strong> tab displays bar plots summarising how much individuals 
+      would pay (main population and by loneliness category).
     </p>
     <p>
-      6. Check the <strong>Probability Plots</strong> tab to visualise predicted uptake 
-      probabilities by loneliness category (Not Lonely, Moderately Lonely, Severely Lonely) 
-      in bar charts.
+      6. The <strong>Program Uptake Probability</strong> tab offers bar charts for predicted 
+      uptake probability in the main model and each loneliness severity group.
     </p>
     <p>
-      7. In <strong>Costs & Benefits</strong>, learn how we handle cost-of-living multipliers 
-      and the A\$5,000 per 1% improvement assumption for benefits.
+      7. In <strong>Costs &amp; Benefits</strong>, explore cost assumptions, including a \$5,000 
+      benefit for each 1% increase in programme uptake.
     </p>
   </div>
 
   <!-- Attributes Tab -->
   <div id="attributesTab" class="tabcontent">
     <h2>Programme Attributes</h2>
-    <p><strong>Cost:</strong> The out-of-pocket cost participants incur each time they join the programme.</p>
-    <p><strong>Accessibility:</strong> Mobility/transport considerations, e.g., local area vs. wider community.</p>
-    <p><strong>Frequency of Interaction:</strong> How often sessions occur (daily reference, weekly, monthly, etc.).</p>
-    <p><strong>Method of Interaction:</strong> In-person, virtual, or hybrid options for those with varying preferences.</p>
-    <p><strong>Duration of Each Interaction:</strong> 30 minutes, 2 hours, 4 hours, or other lengths.</p>
+    <p><strong>Cost:</strong> Out-of-pocket cost per session for participants.</p>
+    <p><strong>Accessibility:</strong> Local area or wider community travel distance, factoring mobility constraints.</p>
+    <p><strong>Frequency of Interaction:</strong> Daily (reference), weekly, monthly, etc.</p>
+    <p><strong>Method of Interaction:</strong> In-person, virtual-only, or hybrid approach.</p>
+    <p><strong>Duration of Each Interaction:</strong> Session lengths (30 minutes, 2 hours, 4 hours, etc.).</p>
     <p><strong>Type of Support Programme:</strong> Peer support, community engagement, counselling, VR, etc.</p>
     <p>
-      Cost-of-living multipliers may apply based on state selection. Next, visit the 
-      <strong>Inputs</strong> tab to configure your scenario.
+      Cost-of-living multipliers may apply based on the state selected. Next, visit <strong>Inputs</strong> 
+      to set your scenario.
     </p>
   </div>
 
@@ -113,13 +111,14 @@
   <div id="inputsTab" class="tabcontent">
     <h2>Programme Inputs</h2>
     <p>
-      Select your scenario attributes below, then click “Calculate & View Results” to see 
-      predicted probabilities, advanced cost-benefit charts, and more in a new window.
+      Configure your scenario below, then click “Calculate &amp; View Results” to open a new window 
+      with predicted probabilities, cost-benefit charts, and more.
     </p>
+
     <form id="inputsForm" onsubmit="event.preventDefault();">
       <div class="form-grid">
 
-        <!-- State + CoL -->
+        <!-- State + Cost-of-Living -->
         <div class="form-item">
           <label for="state_select">State:</label>
           <select id="state_select">
@@ -141,7 +140,7 @@
           </select>
         </div>
 
-        <!-- Cost slider -->
+        <!-- Cost Slider -->
         <div class="form-item">
           <label for="costSlider">
             Cost per Session (AUD): <span id="costLabel">50</span>
@@ -175,7 +174,7 @@
         <div class="form-item">
           <label><input type="checkbox" id="virtualCheck" />Virtual Only</label>
           <br/>
-          <label><input type="checkbox" id="hybridCheck" />Hybrid (In-person & Virtual)</label>
+          <label><input type="checkbox" id="hybridCheck" />Hybrid (In-person &amp; Virtual)</label>
         </div>
 
         <!-- Duration -->
@@ -185,7 +184,7 @@
           <label><input type="checkbox" id="fourHCheck" />4-Hour Session</label>
         </div>
 
-        <!-- Type of Support -->
+        <!-- Programme Type -->
         <div class="form-item">
           <label><input type="checkbox" id="commCheck" />Community Engagement</label>
           <br/>
@@ -196,7 +195,7 @@
 
       </div>
       <div class="buttons-row">
-        <button type="button" onclick="openSingleScenario()">Calculate & View Results</button>
+        <button type="button" onclick="openSingleScenario()">Calculate &amp; View Results</button>
       </div>
     </form>
   </div>
@@ -205,8 +204,7 @@
   <div id="wtpTab" class="tabcontent">
     <h2>Willingness to Pay (WTP) Results</h2>
     <p>
-      We use bar plots to display WTP (A$) from the Error-Component Logit Model for the main 
-      population and by loneliness category.
+      Click “Show WTP Plots” to load bar charts of WTP for the main model and each loneliness category.
     </p>
     <div class="buttons-row">
       <button onclick="renderWTPCharts()">Show WTP Plots</button>
@@ -233,13 +231,13 @@
 
   <!-- Probability Plots Tab -->
   <div id="probChartsTab" class="tabcontent">
-    <h2>Predicted Uptake Probability Plots</h2>
+    <h2>Program Uptake Probability</h2>
     <p>
-      View bar charts illustrating uptake probabilities for the main population and each 
-      loneliness category (Not Lonely, Moderately Lonely, Severely Lonely). 
+      Click “Show Program Probability Uptake Plots” to visualise bar charts for predicted 
+      programme uptake in the main model and each loneliness category.
     </p>
     <div class="buttons-row">
-      <button onclick="renderProbCharts()">Show Probability Plots</button>
+      <button onclick="renderProbCharts()">Show Program Probability Uptake Plots</button>
     </div>
     <div class="chart-grid">
       <div class="chart-box">
@@ -263,21 +261,21 @@
 
   <!-- Costs & Benefits Tab -->
   <div id="costsTab" class="tabcontent">
-    <h2>Cost Components & Benefits</h2>
+    <h2>Cost Components &amp; Benefits</h2>
     <p>
-      We assume a cost-of-living multiplier by state and a benefit of <strong>A\$5,000 for each 
-      1% improvement</strong> in programme uptake. Cost components generally include:
+      We assume a cost-of-living multiplier (per state) and a benefit of 
+      <strong>A\$5,000 for each 1% improvement</strong> in programme uptake. 
+      Cost elements can include:
     </p>
     <ul>
       <li>Staff/Personnel</li>
-      <li>Facilities & Equipment</li>
-      <li>Marketing & Outreach</li>
-      <li>Training & Certification</li>
+      <li>Facilities &amp; Equipment</li>
+      <li>Marketing &amp; Outreach</li>
+      <li>Training &amp; Certification</li>
       <li>Miscellaneous Operational Expenses</li>
-      <li>Cost-of-Living Multipliers (if selected)</li>
     </ul>
     <p>
-      These represent a realistic baseline for financial calculations in the tool.
+      These represent a realistic starting point for cost and benefit assumptions within the tool.
     </p>
   </div>
 
@@ -285,8 +283,8 @@
   <div id="scenariosTab" class="tabcontent">
     <h2>Saved Scenarios</h2>
     <p>
-      Click “Save Current Scenario” under <strong>Inputs</strong> to store your scenario, 
-      then compare multiple scenarios here using advanced cost-benefit charts or PDF exports.
+      Save your current scenario from the <strong>Inputs</strong> tab, then compare multiple 
+      scenarios with advanced cost-benefit charts or PDF exports.
     </p>
     <div class="buttons-row">
       <button onclick="saveScenario()">Save Current Scenario</button>
@@ -323,7 +321,7 @@
     </p>
   </footer>
 </div>
-<!-- Reference script file -->
+<!-- Our main script file -->
 <script src="script.js"></script>
 </body>
 </html>
