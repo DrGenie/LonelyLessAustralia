@@ -45,7 +45,7 @@ header h1 {
   color: #fff;
 }
 
-/* Tabcontent Hidden by Default */
+/* Tabcontent: all hidden by default; shown by JS */
 .tabcontent {
   display: none;
   margin-top: 10px;
@@ -124,6 +124,21 @@ header h1 {
 #costLabel {
   color: #e74c3c;
   font-weight: bold;
+}
+
+/* WTP Tables */
+.wtpTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+.wtpTable th, .wtpTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+.wtpTable th {
+  background: #2980b9;
+  color: #fff;
 }
 
 /* Footer */
