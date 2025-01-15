@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="styles.css">
     <!-- Google Fonts for better typography -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Chart.js CDN for visualisation -->
+    <!-- Chart.js CDN for visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Font Awesome for icons (optional) -->
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- jsPDF CDN for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -70,7 +70,7 @@
             <!-- Adjust Costs for Living Expenses -->
             <fieldset class="form-section" aria-labelledby="adjust-costs-heading">
                 <legend id="adjust-costs-heading">Adjust Costs for Living Expenses</legend>
-                <p>Whether support costs should be adjusted for the cost of living across states.</p>
+                <p>Whether support costs should be adjusted by the cost of living expenses across states.</p>
                 
                 <div class="form-group">
                     <label for="adjust_costs">Adjust Costs for Living Expenses?</label>
@@ -82,20 +82,21 @@
                 </div>
             </fieldset>
             
-            <!-- Costs of Support Programme -->
+            <!-- Costs of Support Program -->
             <fieldset class="form-section" aria-labelledby="costs-heading">
-                <legend id="costs-heading">Costs of Support Programme</legend>
-                <p>This refers to the out-of-pocket cost participants will incur each time they take part in the programme.</p>
+                <legend id="costs-heading">Costs of Support Program</legend>
+                <p>This refers to the out-of-pocket cost participants will incur each time they participate in the support programme.</p>
                 
                 <div class="form-group">
-                    <label for="cost_cont">Cost Continuum (AUD):</label>
+                    <label for="cost_cont">Cost Continuum:</label>
+                    <!-- Adjusted for intervals from 0 to 100 -->
                     <select id="cost_cont" name="cost_cont" aria-required="true" aria-describedby="cost_cont_desc">
                         <option value="0">Cost Free (0)</option>
-                        <option value="10">Affordable (10)</option>
-                        <option value="20">Low Cost (20)</option>
-                        <option value="40">Moderate Cost (40)</option>
-                        <option value="60">High Cost (60)</option>
-                        <option value="80">Expensive (80)</option>
+                        <option value="10">Low (10)</option>
+                        <option value="20">Moderate (20)</option>
+                        <option value="30">Medium (30)</option>
+                        <option value="50">Higher (50)</option>
+                        <option value="75">Expensive (75)</option>
                         <option value="100">Very Expensive (100)</option>
                     </select>
                     <span id="cost_cont_desc" class="sr-only">Select the cost level of the support programme</span>
@@ -108,43 +109,45 @@
                 <p>This refers to the ease of accessing the programme, considering physical mobility and transportation.</p>
                 
                 <div class="form-group">
-                    <label for="dist_signif">Distance Significance (Wider Community Travel ~ 50+ km):</label>
+                    <label for="dist_signif">Distance Significance (Ref: At home):</label>
                     <select id="dist_signif" name="dist_signif" aria-describedby="dist_signif_desc">
-                        <option value="0">Not Applicable (0)</option>
-                        <option value="1">Wider Community Accessibility (1)</option>
+                        <option value="0">At home (0)</option>
+                        <option value="1">Local area (1)</option>
+                        <option value="2">Wider community (2)</option>
                     </select>
-                    <span id="dist_signif_desc" class="sr-only">Select if distance is significantly wide (50+ km)</span>
+                    <span id="dist_signif_desc" class="sr-only">Select if it's local area or wider community travel</span>
                 </div>
         
+                <!-- For backward compatibility, keep dist_local, though new approach is dist_signif with values 0,1,2 -->
                 <div class="form-group">
-                    <label for="dist_local">Local Area Accessibility (up to 12 km travel):</label>
+                    <label for="dist_local">Local Accessibility Toggle (Legacy):</label>
                     <select id="dist_local" name="dist_local" aria-describedby="dist_local_desc">
-                        <option value="1">Local Area Accessibility (1)</option>
-                        <option value="0">Not Local (0)</option>
+                        <option value="0">No (0)</option>
+                        <option value="1">Yes (1)</option>
                     </select>
-                    <span id="dist_local_desc" class="sr-only">Select if local area accessibility is available</span>
+                    <span id="dist_local_desc" class="sr-only">Select whether local area accessibility is available</span>
                 </div>
             </fieldset>
     
             <!-- Frequency of Interaction or Engagement -->
             <fieldset class="form-section" aria-labelledby="frequency-heading">
-                <legend id="frequency-heading">Frequency of Interaction</legend>
-                <p>This refers to how often individuals will participate.</p>
+                <legend id="frequency-heading">Frequency of Interaction or Engagement (Ref: Daily)</legend>
+                <p>How often individuals participate in the programme, relative to a daily baseline.</p>
                 
                 <div class="form-group">
-                    <label for="freq_monthly">Monthly Frequency:</label>
+                    <label for="freq_monthly">Monthly:</label>
                     <select id="freq_monthly" name="freq_monthly" aria-describedby="freq_monthly_desc">
-                        <option value="1">Monthly (1)</option>
-                        <option value="0">Not Monthly (0)</option>
+                        <option value="0">No (0)</option>
+                        <option value="1">Yes (1)</option>
                     </select>
                     <span id="freq_monthly_desc" class="sr-only">Select if the programme occurs monthly</span>
                 </div>
         
                 <div class="form-group">
-                    <label for="freq_weekly">Weekly Frequency:</label>
+                    <label for="freq_weekly">Weekly:</label>
                     <select id="freq_weekly" name="freq_weekly" aria-describedby="freq_weekly_desc">
-                        <option value="1">Weekly (1)</option>
-                        <option value="0">Not Weekly (0)</option>
+                        <option value="0">No (0)</option>
+                        <option value="1">Yes (1)</option>
                     </select>
                     <span id="freq_weekly_desc" class="sr-only">Select if the programme occurs weekly</span>
                 </div>
@@ -152,23 +155,23 @@
     
             <!-- Method of Engagement or Interaction -->
             <fieldset class="form-section" aria-labelledby="method-heading">
-                <legend id="method-heading">Method of Interaction</legend>
-                <p>This refers to how individuals prefer to connect, accounting for mobility or digital familiarity.</p>
+                <legend id="method-heading">Method of Engagement or Interaction (Ref: In-person)</legend>
+                <p>This refers to how individuals prefer to connect, catering to those who may have mobility issues or prefer digital communication.</p>
                 
                 <div class="form-group">
-                    <label for="mode_virtual">Virtual Mode:</label>
+                    <label for="mode_virtual">Virtual:</label>
                     <select id="mode_virtual" name="mode_virtual" aria-describedby="mode_virtual_desc">
-                        <option value="0">In-Person Only (0)</option>
-                        <option value="1">Virtual Available (1)</option>
+                        <option value="0">No (0)</option>
+                        <option value="1">Yes (1)</option>
                     </select>
                     <span id="mode_virtual_desc" class="sr-only">Select if virtual mode is available</span>
                 </div>
         
                 <div class="form-group">
-                    <label for="mode_hybrid">Hybrid Mode (In-person + Virtual):</label>
+                    <label for="mode_hybrid">Hybrid (virtual & in-person):</label>
                     <select id="mode_hybrid" name="mode_hybrid" aria-describedby="mode_hybrid_desc">
-                        <option value="0">In-Person Only (0)</option>
-                        <option value="1">Hybrid Available (1)</option>
+                        <option value="0">No (0)</option>
+                        <option value="1">Yes (1)</option>
                     </select>
                     <span id="mode_hybrid_desc" class="sr-only">Select if hybrid mode is available</span>
                 </div>
@@ -176,39 +179,39 @@
     
             <!-- Duration of Each Interaction -->
             <fieldset class="form-section" aria-labelledby="duration-heading">
-                <legend id="duration-heading">Duration of Each Interaction</legend>
-                <p>This refers to the length of each interaction or activity.</p>
+                <legend id="duration-heading">Duration of Each Interaction (Ref: 30 minutes)</legend>
+                <p>This refers to how long each session lasts.</p>
                 
                 <div class="form-group">
-                    <label for="dur_2hrs">2-hour Interaction:</label>
+                    <label for="dur_2hrs">2-hour interaction:</label>
                     <select id="dur_2hrs" name="dur_2hrs" aria-describedby="dur_2hrs_desc">
-                        <option value="1">Yes (1)</option>
                         <option value="0">No (0)</option>
+                        <option value="1">Yes (1)</option>
                     </select>
-                    <span id="dur_2hrs_desc" class="sr-only">Select if the programme duration is 2 hours</span>
+                    <span id="dur_2hrs_desc" class="sr-only">Select if the programme session lasts 2 hours</span>
                 </div>
         
                 <div class="form-group">
-                    <label for="dur_4hrs">4-hour Interaction:</label>
+                    <label for="dur_4hrs">4-hour interaction:</label>
                     <select id="dur_4hrs" name="dur_4hrs" aria-describedby="dur_4hrs_desc">
-                        <option value="1">Yes (1)</option>
                         <option value="0">No (0)</option>
+                        <option value="1">Yes (1)</option>
                     </select>
-                    <span id="dur_4hrs_desc" class="sr-only">Select if the programme duration is 4 hours</span>
+                    <span id="dur_4hrs_desc" class="sr-only">Select if the programme session lasts 4 hours</span>
                 </div>
             </fieldset>
     
-            <!-- Type of Support Programme -->
+            <!-- Type of Support Program (Ref: Peer Support) -->
             <fieldset class="form-section" aria-labelledby="type-support-heading">
                 <legend id="type-support-heading">Type of Support Programme</legend>
-                <p>This refers to the specific form of support and activities provided.</p>
+                <p>Activities and ways participants connect with others.</p>
                 
                 <div class="support-programs">
                     <div class="support-program">
                         <label for="type_comm">Community Engagement:</label>
                         <select id="type_comm" name="type_comm" aria-describedby="type_comm_desc">
-                            <option value="1">Yes (1)</option>
                             <option value="0">No (0)</option>
+                            <option value="1">Yes (1)</option>
                         </select>
                         <span id="type_comm_desc" class="sr-only">Select if community engagement is included</span>
                     </div>
@@ -216,8 +219,8 @@
                     <div class="support-program">
                         <label for="type_psych">Psychological Counselling:</label>
                         <select id="type_psych" name="type_psych" aria-describedby="type_psych_desc">
-                            <option value="1">Yes (1)</option>
                             <option value="0">No (0)</option>
+                            <option value="1">Yes (1)</option>
                         </select>
                         <span id="type_psych_desc" class="sr-only">Select if psychological counselling is included</span>
                     </div>
@@ -225,8 +228,8 @@
                     <div class="support-program">
                         <label for="type_vr">Virtual Reality:</label>
                         <select id="type_vr" name="type_vr" aria-describedby="type_vr_desc">
-                            <option value="1">Yes (1)</option>
                             <option value="0">No (0)</option>
+                            <option value="1">Yes (1)</option>
                         </select>
                         <span id="type_vr_desc" class="sr-only">Select if virtual reality is included</span>
                     </div>
@@ -241,10 +244,8 @@
         <section id="result" aria-labelledby="result-heading">
             <h2 id="result-heading">Predicted Probability of Programme Uptake: <span id="probability" tabindex="-1">--</span></h2>
             <!-- Brief Interpretations -->
-            <div id="interpretations" aria-live="polite">
-                <!-- Dynamic interpretations will appear here -->
-            </div>
-            <!-- Programme Package Display -->
+            <div id="interpretations" aria-live="polite"></div>
+            <!-- Program Package Display -->
             <section id="programPackage" aria-labelledby="program-package-heading">
                 <h3 id="program-package-heading">Your Selected Programme Package:</h3>
                 <ul id="packageList">
@@ -282,20 +283,31 @@
             </section>
         </section>
     
-        <!-- Chart Container for Loneliness Categories -->
+        <!-- Chart Container for Uptake Probability (Main) -->
+        <div class="chart-container" style="margin-top: 50px;">
+            <canvas id="probabilityChart" aria-label="Doughnut chart showing uptake probability" role="img"></canvas>
+            <div id="probabilityChartSummary" class="sr-only">
+                <p>The Uptake Probability chart displays the likelihood of programme uptake compared to the remaining probability.</p>
+            </div>
+        </div>
+
+        <!-- New Section for Loneliness Categories Charts -->
         <div class="chart-container">
             <h2>Loneliness Category Results</h2>
+            <!-- Not Lonely Chart -->
             <div>
                 <h3>Not Lonely</h3>
-                <canvas id="probabilityChartNotLonely" aria-label="Doughnut chart showing uptake probability for Not Lonely group" role="img"></canvas>
+                <canvas id="probabilityChartNotLonely"></canvas>
             </div>
+            <!-- Moderately Lonely Chart -->
             <div>
                 <h3>Moderately Lonely</h3>
-                <canvas id="probabilityChartModeratelyLonely" aria-label="Doughnut chart showing uptake probability for Moderately Lonely group" role="img"></canvas>
+                <canvas id="probabilityChartModeratelyLonely"></canvas>
             </div>
+            <!-- Severely Lonely Chart -->
             <div>
                 <h3>Severely Lonely</h3>
-                <canvas id="probabilityChartSeverelyLonely" aria-label="Doughnut chart showing uptake probability for Severely Lonely group" role="img"></canvas>
+                <canvas id="probabilityChartSeverelyLonely"></canvas>
             </div>
         </div>
     
