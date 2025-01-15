@@ -1,4 +1,14 @@
 /********************************************
+ * script.js
+ *
+ * Incorporates:
+ * - Final DCE results (Table 3)
+ * - Loneliness category results (Table 5)
+ * - Advanced PDF reporting
+ * - Additional charts for Not Lonely, Moderately Lonely, Severely Lonely
+ ********************************************/
+
+/********************************************
  * Updated Coefficients from Final DCE
  ********************************************/
 const finalCoefficients = {
@@ -74,19 +84,117 @@ const finalCoefficients = {
     }
 };
 
-/******************************************************
- * Cost Data: same as original or adjusted as needed
- ******************************************************/
+/********************************************
+ * Cost Data for Each Programme Attribute
+ ********************************************/
 const costData = {
-    /* (Unchanged from your original code, or update as needed) */
+    type_comm: {
+        personnel: 20000,
+        materials: 2000,
+        technology: 3000,
+        facility: 5000,
+        marketing: 5000,
+        training: 1000,
+        miscellaneous: 1000
+    },
+    type_psych: {
+        personnel: 25000,
+        materials: 1500,
+        technology: 2000,
+        facility: 4000,
+        marketing: 4000,
+        training: 800,
+        miscellaneous: 1200
+    },
+    type_vr: {
+        personnel: 18000,
+        materials: 1000,
+        technology: 5000,
+        facility: 3000,
+        marketing: 3000,
+        training: 700,
+        miscellaneous: 800
+    },
+    mode_virtual: {
+        personnel: 5000,
+        materials: 500,
+        technology: 4000,
+        facility: 0,
+        marketing: 1000,
+        training: 300,
+        miscellaneous: 500
+    },
+    mode_hybrid: {
+        personnel: 7000,
+        materials: 800,
+        technology: 4500,
+        facility: 2000,
+        marketing: 1200,
+        training: 400,
+        miscellaneous: 600
+    },
+    freq_weekly: {
+        personnel: 10000,
+        materials: 1200,
+        technology: 1500,
+        facility: 3000,
+        marketing: 1500,
+        training: 500,
+        miscellaneous: 700
+    },
+    freq_monthly: {
+        personnel: 8000,
+        materials: 1000,
+        technology: 1200,
+        facility: 2500,
+        marketing: 1300,
+        training: 400,
+        miscellaneous: 600
+    },
+    dur_2hrs: {
+        personnel: 3000,
+        materials: 500,
+        technology: 800,
+        facility: 1000,
+        marketing: 700,
+        training: 200,
+        miscellaneous: 300
+    },
+    dur_4hrs: {
+        personnel: 4000,
+        materials: 700,
+        technology: 1000,
+        facility: 1500,
+        marketing: 900,
+        training: 300,
+        miscellaneous: 400
+    },
+    dist_local: {
+        personnel: 5000,
+        materials: 800,
+        technology: 1000,
+        facility: 2000,
+        marketing: 1000,
+        training: 300,
+        miscellaneous: 500
+    },
+    dist_signif: {
+        personnel: 6000,
+        materials: 900,
+        technology: 1100,
+        facility: 2200,
+        marketing: 1100,
+        training: 350,
+        miscellaneous: 550
+    },
+    // cost_cont is handled as a separate scaling in the utility (not part of costData)
 };
 
 /********************************************
- * Benefit Parameters & Cost-of-Living
+ * Benefit Parameters & Cost-of-Living Multipliers
  ********************************************/
-const benefitPerPercent = 10000; // WTP (AUD) per 1% uptake
+const benefitPerPercent = 10000; // $10,000 AUD per 1% uptake probability (WTP in AUD)
 const costOfLivingMultipliers = {
-    // (Unchanged if desired)
     NSW: 1.10,
     VIC: 1.05,
     QLD: 1.00,
@@ -110,7 +218,7 @@ let chartSeverelyLonely;
  * On Page Load, Initialise Charts
  ********************************************/
 window.onload = function () {
-    // Probability chart for main results
+    // Doughnut chart for main results
     let ctx = document.getElementById('probabilityChart').getContext('2d');
     probabilityChart = new Chart(ctx, {
         type: 'doughnut',
@@ -138,7 +246,7 @@ window.onload = function () {
         }
     });
 
-    // CBA Chart
+    // Bar chart for CBA
     let cbaCtx = document.getElementById('cbaChart').getContext('2d');
     cbaChart = new Chart(cbaCtx, {
         type: 'bar',
@@ -148,8 +256,8 @@ window.onload = function () {
                 label: 'Amount (AUD)',
                 data: [0, 0],
                 backgroundColor: [
-                    'rgba(231, 76, 60, 0.6)',
-                    'rgba(39, 174, 96, 0.6)'
+                    'rgba(231, 76, 60, 0.6)', // Red
+                    'rgba(39, 174, 96, 0.6)'  // Green
                 ],
                 borderColor: [
                     'rgba(231, 76, 60, 1)',
@@ -176,14 +284,23 @@ window.onload = function () {
         }
     });
 
-    // Initialise the three new Doughnut charts for loneliness categories
-    chartNotLonely = new Chart(document.getElementById('probabilityChartNotLonely'), {...doughnutChartConfig('Not Lonely Uptake Probability')});
-    chartModeratelyLonely = new Chart(document.getElementById('probabilityChartModeratelyLonely'), {...doughnutChartConfig('Moderately Lonely Uptake Probability')});
-    chartSeverelyLonely = new Chart(document.getElementById('probabilityChartSeverelyLonely'), {...doughnutChartConfig('Severely Lonely Uptake Probability')});
+    // Charts for loneliness categories
+    chartNotLonely = new Chart(
+        document.getElementById('probabilityChartNotLonely'),
+        doughnutChartConfig('Not Lonely Uptake Probability')
+    );
+    chartModeratelyLonely = new Chart(
+        document.getElementById('probabilityChartModeratelyLonely'),
+        doughnutChartConfig('Moderately Lonely Uptake Probability')
+    );
+    chartSeverelyLonely = new Chart(
+        document.getElementById('probabilityChartSeverelyLonely'),
+        doughnutChartConfig('Severely Lonely Uptake Probability')
+    );
 };
 
 /********************************************
- * Reusable function for Doughnut chart config
+ * Doughnut Chart Configuration
  ********************************************/
 function doughnutChartConfig(titleText) {
     return {
@@ -214,12 +331,12 @@ function doughnutChartConfig(titleText) {
 }
 
 /********************************************
- * Calculate Probability (Main)
+ * Calculate Probability (Main trigger)
  ********************************************/
 function calculateProbability() {
+    // Collect form data
     const state = document.getElementById('state_select').value;
     const adjustCosts = document.getElementById('adjust_costs').value;
-    // (Get other form data as before)
     const cost_cont = parseFloat(document.getElementById('cost_cont').value);
     const dist_signif = parseFloat(document.getElementById('dist_signif').value);
     const dist_local = parseFloat(document.getElementById('dist_local').value);
@@ -232,29 +349,39 @@ function calculateProbability() {
     const type_comm = parseFloat(document.getElementById('type_comm').value);
     const type_psych = parseFloat(document.getElementById('type_psych').value);
     const type_vr = parseFloat(document.getElementById('type_vr').value);
-    
-    // (Validate form selections if needed)
 
-    // Adjust cost if needed
+    // Apply cost-of-living multiplier if chosen
     let adjustedCost = cost_cont;
     if (adjustCosts === 'yes' && state && costOfLivingMultipliers[state]) {
         adjustedCost = cost_cont * costOfLivingMultipliers[state];
     }
 
-    // Main model predicted probability
-    const pMain = computeLogit(finalCoefficients.main, adjustedCost, dist_signif, dist_local, freq_monthly, freq_weekly, mode_virtual, mode_hybrid, dur_2hrs, dur_4hrs, type_comm, type_psych, type_vr);
+    // Compute main model predicted probability
+    const pMain = computeLogit(
+        finalCoefficients.main,
+        adjustedCost,
+        dist_signif,
+        dist_local,
+        freq_monthly,
+        freq_weekly,
+        mode_virtual,
+        mode_hybrid,
+        dur_2hrs,
+        dur_4hrs,
+        type_comm,
+        type_psych,
+        type_vr
+    );
+
     document.getElementById('probability').innerText = (pMain * 100).toFixed(2) + '%';
     updateDoughnutChart(probabilityChart, pMain);
-
-    // Interpretations
     document.getElementById('interpretations').innerHTML = generateInterpretations(pMain);
 
-    // Display package info, costs, benefits, etc.
+    // Update selected programme package, cost, benefits
     const packageList = document.getElementById('packageList');
     packageList.innerHTML = generateProgramPackage();
     handleDownloadButtons(packageList);
 
-    // Calculate cost & benefits, update displays
     const costResults = calculateTotalCost(state, adjustCosts);
     displayCosts(costResults);
     const benefits = calculateBenefits(pMain);
@@ -262,40 +389,107 @@ function calculateProbability() {
     displayCBA(costResults.grandTotal, benefits);
     updateCBACChart(costResults.grandTotal, benefits);
 
-    // Now compute & update for each loneliness category
-    const pNotLonely = computeLogit(finalCoefficients.notLonely, adjustedCost, dist_signif, dist_local, freq_monthly, freq_weekly, mode_virtual, mode_hybrid, dur_2hrs, dur_4hrs, type_comm, type_psych, type_vr);
+    // Compute & update for each loneliness category
+    const pNotLonely = computeLogit(
+        finalCoefficients.notLonely,
+        adjustedCost,
+        dist_signif,
+        dist_local,
+        freq_monthly,
+        freq_weekly,
+        mode_virtual,
+        mode_hybrid,
+        dur_2hrs,
+        dur_4hrs,
+        type_comm,
+        type_psych,
+        type_vr
+    );
     updateDoughnutChart(chartNotLonely, pNotLonely);
 
-    const pModLonely = computeLogit(finalCoefficients.moderatelyLonely, adjustedCost, dist_signif, dist_local, freq_monthly, freq_weekly, mode_virtual, mode_hybrid, dur_2hrs, dur_4hrs, type_comm, type_psych, type_vr);
+    const pModLonely = computeLogit(
+        finalCoefficients.moderatelyLonely,
+        adjustedCost,
+        dist_signif,
+        dist_local,
+        freq_monthly,
+        freq_weekly,
+        mode_virtual,
+        mode_hybrid,
+        dur_2hrs,
+        dur_4hrs,
+        type_comm,
+        type_psych,
+        type_vr
+    );
     updateDoughnutChart(chartModeratelyLonely, pModLonely);
 
-    const pSevLonely = computeLogit(finalCoefficients.severelyLonely, adjustedCost, dist_signif, dist_local, freq_monthly, freq_weekly, mode_virtual, mode_hybrid, dur_2hrs, dur_4hrs, type_comm, type_psych, type_vr);
+    const pSevLonely = computeLogit(
+        finalCoefficients.severelyLonely,
+        adjustedCost,
+        dist_signif,
+        dist_local,
+        freq_monthly,
+        freq_weekly,
+        mode_virtual,
+        mode_hybrid,
+        dur_2hrs,
+        dur_4hrs,
+        type_comm,
+        type_psych,
+        type_vr
+    );
     updateDoughnutChart(chartSeverelyLonely, pSevLonely);
 }
 
 /********************************************
- * Compute Logit Function
+ * Compute Logit (Utility vs. Opt-out)
  ********************************************/
-function computeLogit(coef, cost_cont, dist_signif, dist_local, freq_monthly, freq_weekly, mode_virtual, mode_hybrid, dur_2hrs, dur_4hrs, type_comm, type_psych, type_vr) {
-    // Utility for 'chosen alternative' vs. opt-out
-    let U_alt = coef.ASC_mean
-               + coef.type_comm * type_comm
-               + coef.type_psych * type_psych
-               + coef.type_vr * type_vr
-               + coef.mode_virtual * mode_virtual
-               + coef.mode_hybrid * mode_hybrid
-               + coef.freq_weekly * freq_weekly
-               + coef.freq_monthly * freq_monthly
-               + coef.dur_2hrs * dur_2hrs
-               + coef.dur_4hrs * dur_4hrs
-               + coef.dist_local * dist_local
-               + coef.dist_signif * dist_signif
-               + coef.cost_cont * cost_cont;
+function computeLogit(coef, cost_cont, dist_signif, dist_local, freq_monthly, freq_weekly,
+                      mode_virtual, mode_hybrid, dur_2hrs, dur_4hrs,
+                      type_comm, type_psych, type_vr) {
 
+    // Because 'dist_signif' has 3 possible values (0,1,2) in this code,
+    // we apply them as dummy-coded or interpret them carefully:
+    // 0 = at home, 1 = local area, 2 = wider community
+    // For the final Coeffs: dist_local and dist_signif are separate. 
+    // Adapt as needed. Example approach:
+    // If dist_signif=2 => use coefficient for "wider community"
+    // If dist_signif=1 => use coefficient for "local area"
+    // If dist_signif=0 => baseline (at home, no added cost?)
+    // But to keep it aligned with the final model specification:
+    // dist_local ~ local area, dist_signif ~ wider community
+    // We'll do a small logic parse:
+    let dist_local_dummy = 0;
+    let dist_wider_dummy = 0;
+    if (dist_signif === 1) {
+        dist_local_dummy = 1;
+    } else if (dist_signif === 2) {
+        dist_wider_dummy = 1;
+    }
+
+    // Utility for chosen alternative
+    let U_alt = coef.ASC_mean
+        + coef.type_comm * type_comm
+        + coef.type_psych * type_psych
+        + coef.type_vr * type_vr
+        + coef.mode_virtual * mode_virtual
+        + coef.mode_hybrid * mode_hybrid
+        + coef.freq_weekly * freq_weekly
+        + coef.freq_monthly * freq_monthly
+        + coef.dur_2hrs * dur_2hrs
+        + coef.dur_4hrs * dur_4hrs
+        + coef.dist_local * dist_local_dummy
+        + coef.dist_signif * dist_wider_dummy
+        + coef.cost_cont * cost_cont;
+
+    // Utility for opt-out
     let U_optout = coef.ASC_optout;
+
     let exp_alt = Math.exp(U_alt);
     let exp_optout = Math.exp(U_optout);
 
+    // Probability = exp(U_alt) / [exp(U_alt) + exp(U_optout)]
     return exp_alt / (exp_alt + exp_optout);
 }
 
@@ -306,6 +500,7 @@ function updateDoughnutChart(chartInstance, probability) {
     const p = Math.min(Math.max(probability, 0), 1);
     chartInstance.data.datasets[0].data = [p, 1 - p];
 
+    // Colour changes based on probability
     if (p < 0.3) {
         chartInstance.data.datasets[0].backgroundColor = ['rgba(231, 76, 60, 0.6)', 'rgba(236, 240, 241, 0.3)'];
         chartInstance.data.datasets[0].borderColor = ['rgba(231, 76, 60, 1)', 'rgba(236, 240, 241, 1)'];
@@ -332,20 +527,20 @@ function generateInterpretations(probability) {
     } else {
         msg = '<p>This configuration yields a high probability of uptake (&gt;70%). Older adults are likely to find these programme features appealing.</p>';
     }
+    // Reference to de Jong Gierveld scale
     return msg + `<p><em>Loneliness categories used here are based on the De Jong Gierveld Loneliness Scale [de Jong Gierveld & Kamphuis, 1985].</em></p>`;
 }
 
 /********************************************
- * Generate Program Package
+ * Generate Programme Package (Selected Attributes)
  ********************************************/
 function generateProgramPackage() {
-    // (Same logic as before)
     const packageList = [];
     const form = document.getElementById('decisionForm');
     const selects = form.getElementsByTagName('select');
     for (let select of selects) {
         if (select.id === 'state_select' || select.id === 'adjust_costs') {
-            continue;
+            continue; 
         }
         if (select.value === "1") {
             let label = select.previousElementSibling.innerText;
@@ -354,11 +549,15 @@ function generateProgramPackage() {
             packageList.push(`${label}: ${value}`);
         }
     }
-    return packageList.map(item => `<li>${item}</li>`).join('');
+    let listItems = '';
+    packageList.forEach(item => {
+        listItems += `<li>${item}</li>`;
+    });
+    return listItems;
 }
 
 /********************************************
- * Handle Download Buttons
+ * Handle Download Buttons Visibility
  ********************************************/
 function handleDownloadButtons(packageList) {
     const downloadPackageBtn = document.getElementById('downloadPackageBtn');
@@ -376,10 +575,6 @@ function handleDownloadButtons(packageList) {
  * Calculate Total Cost
  ********************************************/
 function calculateTotalCost(state, adjustCosts) {
-    // (Same approach as before, using costData)
-    // Return { totalCost, grandTotal }
-    // ...
-    // For brevity, re-use your prior logic
     const selectedAttributes = getSelectedAttributes();
     let totalCost = {
         personnel: 0,
@@ -390,29 +585,43 @@ function calculateTotalCost(state, adjustCosts) {
         training: 0,
         miscellaneous: 0
     };
+    
     selectedAttributes.forEach(attr => {
         const costs = costData[attr] || {};
         for (let key in totalCost) {
-            if (costs[key]) {
+            if (Object.hasOwn(costs, key)) {
                 totalCost[key] += costs[key];
             }
         }
     });
 
-    let grandTotal = Object.values(totalCost).reduce((a, b) => a + b, 0);
+    let grandTotal = 0;
+    for (let key in totalCost) {
+        grandTotal += totalCost[key];
+    }
+
+    // Apply cost-of-living multiplier if chosen
     if (adjustCosts === 'yes' && state && costOfLivingMultipliers[state]) {
         grandTotal *= costOfLivingMultipliers[state];
     }
+
     return { totalCost, grandTotal };
 }
 
+/********************************************
+ * Get Selected Attributes
+ ********************************************/
 function getSelectedAttributes() {
     const form = document.getElementById('decisionForm');
     const selects = form.getElementsByTagName('select');
     const attributes = [];
     for (let select of selects) {
-        if (select.id === 'state_select' || select.id === 'adjust_costs') continue;
-        if (select.value === "1") attributes.push(select.id);
+        if (select.id === 'state_select' || select.id === 'adjust_costs') {
+            continue;
+        }
+        if (select.value === "1") {
+            attributes.push(select.id);
+        }
     }
     return attributes;
 }
@@ -421,16 +630,18 @@ function getSelectedAttributes() {
  * Calculate Benefits
  ********************************************/
 function calculateBenefits(probability) {
+    // Probability * 100 = 'percentage'; multiply by benefitPerPercent for total
     return probability * 100 * benefitPerPercent;
 }
 
 /********************************************
- * Display Costs & Benefits
+ * Display Cost Information
  ********************************************/
 function displayCosts(costResults) {
     const { totalCost, grandTotal } = costResults;
     const costList = document.getElementById('costList');
     const totalCostDisplay = document.getElementById('totalCost');
+    
     costList.innerHTML = '';
     for (let key in totalCost) {
         if (totalCost[key] > 0) {
@@ -439,19 +650,23 @@ function displayCosts(costResults) {
             costList.appendChild(li);
         }
     }
+
     totalCostDisplay.innerText = grandTotal.toLocaleString();
 }
 
+/********************************************
+ * Display Benefits
+ ********************************************/
 function displayBenefits(benefits) {
     document.getElementById('totalBenefits').innerText = benefits.toLocaleString();
 }
 
 /********************************************
- * Display CBA
+ * Display Cost-Benefit Analysis
  ********************************************/
 function displayCBA(totalCost, benefits) {
     const netBenefit = benefits - totalCost;
-    const bcr = (totalCost === 0) ? 0 : (benefits / totalCost);
+    const bcr = (totalCost === 0) ? 0 : benefits / totalCost;
     document.getElementById('netBenefit').innerText = netBenefit.toLocaleString();
     document.getElementById('bcr').innerText = bcr.toFixed(2);
 }
@@ -465,14 +680,14 @@ function updateCBACChart(totalCost, benefits) {
 }
 
 /********************************************
- * Capitalise First Letter
+ * Capitalise Function
  ********************************************/
-function capitalise(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+function capitalise(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 /********************************************
- * Download Package
+ * Download Package as Text
  ********************************************/
 function downloadPackage() {
     const packageList = document.getElementById('packageList');
@@ -480,11 +695,11 @@ function downloadPackage() {
         alert("No programme package selected to download.");
         return;
     }
-    let text = 'Selected Programme Package:\n';
+    let packageText = 'Selected Programme Package:\n';
     for (let li of packageList.children) {
-        text += li.innerText + '\n';
+        packageText += li.innerText + '\n';
     }
-    const blob = new Blob([text], { type: 'text/plain' });
+    const blob = new Blob([packageText], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -495,10 +710,14 @@ function downloadPackage() {
 }
 
 /********************************************
- * Download Probability Chart
+ * Download Probability Chart as PNG
  ********************************************/
 function downloadChart() {
     const canvas = document.getElementById('probabilityChart');
+    if (!canvas) {
+        alert("No main probability chart available for download.");
+        return;
+    }
     const link = document.createElement('a');
     link.href = canvas.toDataURL('image/png');
     link.download = 'Uptake_Probability_Chart.png';
@@ -526,24 +745,23 @@ function downloadCBAPDF() {
     doc.setFontSize(16);
     doc.text("LonelyLessAustralia – Cost-Benefit Analysis Report", 10, 20);
 
-    // Basic info
+    // Basic Info
     doc.setFontSize(12);
-    doc.text(`State selected: ${state || 'N/A'}`, 10, 30);
+    doc.text(`State selected: ${state ? state : 'N/A'}`, 10, 30);
     doc.text(`Adjust Costs: ${adjustCosts === 'yes' ? 'Yes' : 'No'}`, 10, 40);
 
-    // CBA data
+    // CBA Data
     doc.text(`Predicted Uptake Probability: ${(pMain * 100).toFixed(2)}%`, 10, 50);
     doc.text(`Total Estimated Cost: $${grandTotal.toLocaleString()} AUD`, 10, 60);
     doc.text(`Total Estimated Benefits: $${benefits.toLocaleString()} AUD`, 10, 70);
     doc.text(`Net Benefit: $${netBenefit.toLocaleString()} AUD`, 10, 80);
     doc.text(`Benefit-Cost Ratio: ${bcr.toFixed(2)}`, 10, 90);
 
-    // (Optional) Add chart images
-    // For brevity, just mention code snippet:
-    // let chartImg = probabilityChart.toBase64Image();
+    // Optional: Embed chart images here if desired.
+    // Example (for main probability chart):
+    // const chartImg = document.getElementById('probabilityChart').toDataURL('image/png');
     // doc.addImage(chartImg, 'PNG', 10, 100, 80, 80);
 
-    // Final
     doc.save('CBA_Report.pdf');
     alert("Cost-Benefit Analysis report downloaded successfully!");
 }
@@ -555,6 +773,7 @@ document.getElementById('feedbackForm').addEventListener('submit', function(even
     event.preventDefault();
     const feedback = document.getElementById('feedback').value.trim();
     if (feedback) {
+        // In a real application, send this to a server
         alert("Thank you for your feedback!");
         document.getElementById('feedbackForm').reset();
     } else {
