@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AussieConnect Plus Decision Aid Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>AussieConnect Plus Decision Aid Tool</h1>
+        <form id="decisionForm">
+            <div class="form-group">
+                <label for="state_select">Select State:</label>
+                <select id="state_select" name="state_select">
+                    <option value="">--Select State--</option>
+                    <option value="NSW">New South Wales</option>
+                    <option value="VIC">Victoria</option>
+                    <option value="QLD">Queensland</option>
+                    <option value="WA">Western Australia</option>
+                    <option value="SA">South Australia</option>
+                    <option value="TAS">Tasmania</option>
+                    <option value="ACT">Australian Capital Territory</option>
+                    <option value="NT">Northern Territory</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="adjust_costs">Adjust Costs for Living Expenses:</label>
+                <select id="adjust_costs" name="adjust_costs">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+            <!-- Add your program attributes here -->
+            <div class="form-group">
+                <label for="type_comm">Community Engagement:</label>
+                <select id="type_comm" name="type_comm">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="type_psych">Psychological Counselling:</label>
+                <select id="type_psych" name="type_psych">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="type_vr">Virtual Reality:</label>
+                <select id="type_vr" name="type_vr">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <!-- Continue adding other attributes similarly -->
+            <div class="form-group">
+                <label for="mode_virtual">Virtual Mode:</label>
+                <select id="mode_virtual" name="mode_virtual">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="mode_hybrid">Hybrid Mode:</label>
+                <select id="mode_hybrid" name="mode_hybrid">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="freq_weekly">Weekly Frequency:</label>
+                <select id="freq_weekly" name="freq_weekly">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="freq_monthly">Monthly Frequency:</label>
+                <select id="freq_monthly" name="freq_monthly">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dur_2hrs">2-Hour Duration:</label>
+                <select id="dur_2hrs" name="dur_2hrs">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dur_4hrs">4-Hour Duration:</label>
+                <select id="dur_4hrs" name="dur_4hrs">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dist_local">Local Area Accessibility:</label>
+                <select id="dist_local" name="dist_local">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dist_signif">Wider Community Accessibility:</label>
+                <select id="dist_signif" name="dist_signif">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cost_cont">Cost per Session:</label>
+                <input type="number" id="cost_cont" name="cost_cont" value="100">
+            </div>
+            <button type="button" onclick="calculateProbability()">Calculate</button>
+        </form>
+        <div id="results">
+            <h2>Results</h2>
+            <p><strong>Predicted Uptake Probability:</strong> <span id="probability">--</span></p>
+            <div class="chart-container">
+                <canvas id="probabilityChart"></canvas>
+            </div>
+            <div id="interpretations"></div>
+            <div id="package">
+                <h3>Selected Program Package:</h3>
+                <ul id="packageList"></ul>
+            </div>
+            <div id="costInformation">
+                <h3>Cost Information:</h3>
+                <ul id="costList"></ul>
+                <p><strong>Grand Total:</strong> $<span id="totalCost">--</span> AUD</p>
+                <div id="benefits"></div>
+                <div id="cba"></div>
+                <div class="chart-container">
+                    <canvas id="cbaChart"></canvas>
+                </div>
+            </div>
+            <button id="downloadPackageBtn" style="display:none;" onclick="downloadPackage()">Download Program Package</button>
+            <button id="downloadChartBtn" style="display:none;" onclick="downloadChart()">Download Uptake Probability Chart</button>
+            <button onclick="downloadCBAPDF()">Download Enhanced CBA Report (PDF)</button>
+            <button onclick="openWTP()">Open WTP Report</button>
+            <button onclick="openCategoryResults()">Open Results by Loneliness Category</button>
+        </div>
+        <div id="feedback">
+            <h2>Feedback</h2>
+            <form id="feedbackForm">
+                <textarea id="feedback" name="feedback" rows="4" cols="50" placeholder="Enter your feedback here..."></textarea><br>
+                <button type="submit">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
