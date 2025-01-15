@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>LonelyLessAustralia Decision Aid Tool</title>
   <link rel="stylesheet" href="styles.css" />
-  <!-- Chart.js for in-page charts -->
+  <!-- Chart.js for charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- jsPDF for PDF generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -16,7 +16,6 @@
     <h1>LonelyLessAustralia Decision Aid Tool</h1>
   </header>
 
-  <!-- TAB BUTTONS -->
   <div class="tabs">
     <button class="tablink active" onclick="openTab('introTab', this)">Introduction</button>
     <button class="tablink" onclick="openTab('attributesTab', this)">Attributes</button>
@@ -26,7 +25,7 @@
     <button class="tablink" onclick="openTab('scenariosTab', this)">Scenarios</button>
   </div>
 
-  <!-- TAB CONTENT: INTRODUCTION -->
+  <!-- INTRODUCTION TAB -->
   <div id="introTab" class="tabcontent">
     <div class="intro-box">
       <p>
@@ -34,62 +33,49 @@
         to significant health and economic challenges. This online decision aid tool was 
         developed from a discrete choice experiment that identified older adults’ preferences 
         for various support programmes designed to reduce loneliness in Australia. Utilising 
-        these insights and estimates, the tool predicts the probability of uptake for different 
-        programme packages, enabling personalised support based on factors older adults consider 
-        when seeking services.
+        the DCE’s insights and estimates, the tool predicts the probability of uptake for 
+        different programme packages, enabling personalised support services based on the key 
+        factors older adults consider when seeking support.
       </p>
       <p>
         The loneliness categories used in this study were derived from the widely validated 
         <em>De Jong Gierveld Loneliness Scale</em> (11-item version), which measures both 
         emotional and social loneliness. A total loneliness score was calculated as the sum 
         of emotional and social loneliness scores, reflecting an individual’s overall level 
-        of loneliness. Following the established methodology of the scale, the total score 
-        was then categorised into three distinct levels—Not Lonely, Moderately Lonely, and 
-        Severely Lonely—to allow meaningful comparisons based on loneliness severity.
+        of loneliness. Following the established methodology of the De Jong Gierveld scale, 
+        the total loneliness score was categorised into three distinct levels—Not Lonely, 
+        Moderately Lonely, and Severely Lonely—to enable meaningful comparisons across 
+        varying degrees of loneliness.
       </p>
       <p>
-        Please use the tabs above to explore the attributes, inputs, WTP results, cost-benefit 
-        details, and scenario-saving or comparison features.
+        You can navigate using the tabs above to learn about the attributes, set up your 
+        scenario inputs, view WTP data, examine costs & benefits, and save or compare 
+        scenarios.
       </p>
     </div>
   </div>
 
-  <!-- TAB CONTENT: ATTRIBUTES -->
+  <!-- ATTRIBUTES TAB -->
   <div id="attributesTab" class="tabcontent">
     <h2>Programme Attributes</h2>
+    <p><strong>Cost:</strong> The out-of-pocket cost participants will incur each time they participate in the support programme.</p>
+    <p><strong>Accessibility:</strong> The ease of accessing the programme, considering physical mobility and transportation (e.g., local area vs. wider community).</p>
+    <p><strong>Frequency of Interaction:</strong> How often individuals will participate (e.g., weekly, monthly, or daily reference).</p>
+    <p><strong>Method of Interaction:</strong> How individuals prefer to connect, accommodating those who prefer virtual or hybrid options.</p>
+    <p><strong>Duration of Each Interaction:</strong> The length of each session or activity (e.g., 30 minutes, 2 hours, 4 hours).</p>
+    <p><strong>Type of Support Programme:</strong> How participants connect with others and the kinds of activities involved (e.g., peer support, community engagement, psychological counselling, or virtual reality).</p>
     <p>
-      <strong>Cost:</strong> The out-of-pocket cost participants will incur each time they 
-      participate in the support programme.
-    </p>
-    <p>
-      <strong>Accessibility:</strong> The ease of accessing the programme, considering 
-      physical mobility and transportation (Local Area = up to 12 km, Wider Community = 50+ km).
-    </p>
-    <p>
-      <strong>Frequency of Interaction:</strong> How often individuals will participate in 
-      the programme (Daily as the reference category, with Weekly or Monthly as alternatives).
-    </p>
-    <p>
-      <strong>Method of Interaction:</strong> How individuals prefer to connect (In-person 
-      as the reference, or Virtual Only, or Hybrid).
-    </p>
-    <p>
-      <strong>Duration of Each Interaction:</strong> The length of each session (30 minutes 
-      as reference, 2 hours, or 4 hours).
-    </p>
-    <p>
-      <strong>Type of Support Programme:</strong> The nature of activities or connection 
-      offered (Peer Support as reference, or Community Engagement, Psychological Counselling, 
-      Virtual Reality).
+      Cost-of-living adjustments apply based on the state selected. Proceed to the <strong>Inputs</strong> tab to configure a scenario.
     </p>
   </div>
 
-  <!-- TAB CONTENT: INPUTS -->
+  <!-- INPUTS TAB -->
   <div id="inputsTab" class="tabcontent">
     <h2>Programme Inputs</h2>
     <p>
-      Select attributes below, then click “Calculate & View Results” to see predictions and 
-      cost-benefit analyses in a separate window.
+      Select or configure the scenario attributes below, then click “Calculate & View Results” 
+      to open a results window with predicted probabilities by loneliness category, cost-benefit 
+      analysis, and advanced charts.
     </p>
 
     <form id="inputsForm" onsubmit="event.preventDefault();">
@@ -118,7 +104,7 @@
 
         <!-- Cost Slider -->
         <div class="form-item">
-          <label for="costSlider">Cost per Session (AUD): <span id="costLabel">50</span></label>
+          <label for="costSlider">Cost per Session (A$): <span id="costLabel">50</span></label>
           <input 
             type="range" 
             id="costSlider" 
@@ -146,7 +132,7 @@
         <div class="form-item">
           <label><input type="checkbox" id="virtualCheck" />Virtual Only</label>
           <br/>
-          <label><input type="checkbox" id="hybridCheck" />Hybrid (In-person & Virtual)</label>
+          <label><input type="checkbox" id="hybridCheck" />Hybrid (In-Person & Virtual)</label>
         </div>
 
         <!-- Duration -->
@@ -156,7 +142,7 @@
           <label><input type="checkbox" id="fourHCheck" />4-Hour Session</label>
         </div>
 
-        <!-- Programme Type -->
+        <!-- Type of Support -->
         <div class="form-item">
           <label><input type="checkbox" id="commCheck" />Community Engagement</label>
           <br/>
@@ -172,113 +158,110 @@
     </form>
   </div>
 
-  <!-- TAB CONTENT: WTP RESULTS -->
+  <!-- WTP RESULTS TAB -->
   <div id="wtpTab" class="tabcontent">
     <h2>Willingness to Pay (WTP) Results</h2>
     <p>
-      WTP measures how much participants would pay for a given attribute. Below are the WTP 
-      estimates for the <strong>Main Model</strong>, followed by WTP for <strong>Not Lonely</strong>, 
-      <strong>Moderately Lonely</strong>, and <strong>Severely Lonely</strong> categories.
+      WTP reflects how much individuals are willing to pay for specific programme features. 
+      Below are the main model estimates (Table 4) and the results by loneliness category 
+      (Table 6).
     </p>
 
-    <!-- Main Model WTP -->
-    <h3>Main Model WTP (A$)</h3>
+    <!-- Main Model WTP (Table 4) -->
+    <h3>Main Model (Table 4)</h3>
     <table class="wtpTable">
       <thead>
         <tr>
           <th>Attribute</th>
           <th>WTP (A$)</th>
           <th>Std. Error</th>
-          <th>p-value</th>
+          <th>P-value</th>
         </tr>
       </thead>
       <tbody id="wtpBodyMain"></tbody>
     </table>
 
-    <!-- Not Lonely -->
-    <h3>Not Lonely WTP (A$)</h3>
+    <!-- WTP by Loneliness Categories (Table 6) -->
+    <h3>Not Lonely</h3>
     <table class="wtpTable">
       <thead>
         <tr>
           <th>Attribute</th>
           <th>WTP (A$)</th>
           <th>Std. Error</th>
-          <th>p-value</th>
+          <th>P-value</th>
+          <th>Sig?</th>
         </tr>
       </thead>
       <tbody id="wtpBodyNotLonely"></tbody>
     </table>
 
-    <!-- Moderately Lonely -->
-    <h3>Moderately Lonely WTP (A$)</h3>
+    <h3>Moderately Lonely</h3>
     <table class="wtpTable">
       <thead>
         <tr>
           <th>Attribute</th>
           <th>WTP (A$)</th>
           <th>Std. Error</th>
-          <th>p-value</th>
+          <th>P-value</th>
+          <th>Sig?</th>
         </tr>
       </thead>
       <tbody id="wtpBodyModLonely"></tbody>
     </table>
 
-    <!-- Severely Lonely -->
-    <h3>Severely Lonely WTP (A$)</h3>
+    <h3>Severely Lonely</h3>
     <table class="wtpTable">
       <thead>
         <tr>
           <th>Attribute</th>
           <th>WTP (A$)</th>
           <th>Std. Error</th>
-          <th>p-value</th>
+          <th>P-value</th>
+          <th>Sig?</th>
         </tr>
       </thead>
       <tbody id="wtpBodySevLonely"></tbody>
     </table>
   </div>
 
-  <!-- TAB CONTENT: COSTS & BENEFITS -->
+  <!-- COSTS & BENEFITS TAB -->
   <div id="costsTab" class="tabcontent">
     <h2>Cost Components & Benefits</h2>
     <p>
-      The total programme cost might involve:
+      Our approach calculates cost-of-living adjustments based on the user’s selected state. 
+      We also measure estimated benefits by assigning a monetary value (e.g., 10,000 A$) per 
+      1% increase in predicted uptake. Below, you can see an example advanced chart for 
+      cost-benefit analysis (CBA).
     </p>
-    <ul>
-      <li>Staff or Personnel Costs</li>
-      <li>Facility or Equipment Costs</li>
-      <li>Marketing or Outreach</li>
-      <li>Training and Certification</li>
-      <li>Miscellaneous Operational Expenses</li>
-      <li>Cost-of-Living Adjustments by State</li>
-    </ul>
+    <canvas id="cbaChart" style="max-width:600px; margin:20px auto; display:block;"></canvas>
     <p>
-      Benefits are assigned by valuing each 1% increase in uptake at a certain monetary figure. 
-      For instance, 1% uptake could be valued at 10,000 AUD, reflecting healthcare savings and 
-      well-being improvements. These figures are illustrative and should be adjusted to 
-      real-world data if available.
+      This chart compares the total cost and total benefits for the last-calculated scenario. 
+      Net benefit is also shown. If no scenario is calculated, the chart will show placeholder data.
     </p>
+    <button onclick="downloadCBAPDF()">Download CBA as PDF</button>
   </div>
 
-  <!-- TAB CONTENT: SCENARIOS -->
+  <!-- SCENARIOS TAB -->
   <div id="scenariosTab" class="tabcontent">
     <h2>Saved Scenarios</h2>
     <p>
-      Once you have set attributes in <strong>Inputs</strong> and opened the results, 
-      you can save them here. You can then compare multiple scenarios, generating 
-      advanced PDFs with cost-benefit charts.
+      After configuring your scenario in <strong>Inputs</strong> and viewing the results, 
+      you can save it here for future reference. You can also compare multiple scenarios 
+      in another window, with PDF chart exports. 
     </p>
     <div class="buttons-row">
       <button onclick="saveScenario()">Save Current Scenario</button>
       <button onclick="openComparison()">Compare All Scenarios</button>
     </div>
+
     <table id="scenarioTable">
       <thead>
         <tr>
           <th>Name</th>
           <th>State</th>
           <th>Cost Adjust?</th>
-          <th>Cost (AUD)</th>
+          <th>Cost (A$)</th>
           <th>Local?</th>
           <th>Wider?</th>
           <th>Weekly?</th>
