@@ -1,29 +1,48 @@
-/************************************************************
- * SCENARIO DATA & COEFFICIENTS
- * (All signs carefully applied so that negative cost_coefs
- *  reduce utility, positive attribute_coefs increase it, etc.)
- ************************************************************/
+/****************************************************************************
+ * 1) TAB CONTROL
+ ****************************************************************************/
+function openTab(evt, tabName) {
+  const tabcontents = document.getElementsByClassName("tabcontent");
+  for (let tc of tabcontents) {
+    tc.style.display = "none";
+  }
+  const tablinks = document.getElementsByClassName("tablink");
+  for (let tl of tablinks) {
+    tl.classList.remove("active");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.classList.add("active");
+}
 
-/** Final DCE Coefficients (Sample) for Predicted Probability **/
+/****************************************************************************
+ * 2) SLIDER LABEL FOR COST
+ ****************************************************************************/
+function updateCostLabel(val) {
+  document.getElementById("cost_label").textContent = val;
+}
+
+/****************************************************************************
+ * 3) SCENARIO LOGIC
+ ****************************************************************************/
+let scenarioList = [];
+
+/** Final model coefficients & cost-of-living multipliers (You can modify these) **/
 const finalCoefficients = {
   main: {
-    // Intercept
-    ASC_mean: -0.112, 
-    // Alternative specific constant: opt-out
+    ASC_mean: -0.112,
     ASC_optout: 0.131,
-    // Attributes
-    type_comm: 0.527,       // +ve -> increases utility
-    type_psych: 0.156,      // +ve
-    type_vr: -0.349,        // -ve
-    mode_virtual: -0.426,   // -ve
-    mode_hybrid: -0.289,    // -ve
-    freq_weekly: 0.617,     // +ve
-    freq_monthly: 0.336,    // +ve
-    dur_2hrs: 0.185,        // +ve
-    dur_4hrs: 0.213,        // +ve
-    dist_local: 0.059,      // +ve
-    dist_signif: -0.509,    // -ve
-    cost_cont: -0.036       // -ve -> higher cost lowers utility
+    type_comm: 0.527,       
+    type_psych: 0.156,      
+    type_vr: -0.349,        
+    mode_virtual: -0.426,  
+    mode_hybrid: -0.289,   
+    freq_weekly: 0.617,    
+    freq_monthly: 0.336,   
+    dur_2hrs: 0.185,       
+    dur_4hrs: 0.213,       
+    dist_local: 0.059,     
+    dist_signif: -0.509,   
+    cost_cont: -0.036      
   },
   notLonely: {
     ASC_mean: -0.149,
@@ -75,7 +94,7 @@ const finalCoefficients = {
   }
 };
 
-/** COST OF LIVING MULTIPLIERS **/
+/** Cost-of-Living Multipliers **/
 const costOfLivingMultipliers = {
   NSW: 1.10,
   VIC: 1.05,
@@ -87,407 +106,443 @@ const costOfLivingMultipliers = {
   NT: 1.07
 };
 
-/** SCENARIO ARRAY - for multiple comparisons **/
-let scenarioList = [];
-
-/************************************************************
- * TABS: Show/Hide logic
- ************************************************************/
-function openTab(evt, tabName) {
-  // Hide all .tabcontent
-  const tabcontents = document.getElementsByClassName("tabcontent");
-  for (let i = 0; i < tabcontents.length; i++) {
-    tabcontents[i].style.display = "none";
-  }
-  // Remove "active" from all tablinks
-  const tablinks = document.getElementsByClassName("tablink");
-  for (let j = 0; j < tablinks.length; j++) {
-    tablinks[j].classList.remove("active");
-  }
-  // Show current tab, add "active" to this button
-  document.getElementById(tabName).style.display = "block";
-  evt.currentTarget.classList.add("active");
-}
-
-/************************************************************
- * SLIDER for COST
- ************************************************************/
-function updateCostLabel(val) {
-  document.getElementById("cost_label").textContent = val;
-}
-
-/************************************************************
- * SAVE SCENARIO
- ************************************************************/
+/****************************************************************************
+ * 4) SAVE SCENARIO
+ ****************************************************************************/
 function saveScenario() {
-  const scenarioName = prompt("Enter a name for this scenario:", "Scenario " + (scenarioList.length + 1));
-  if (!scenarioName) return; // user cancelled
+  let name = prompt("Give a unique name for this scenario:", "Scenario " + (scenarioList.length+1));
+  if (!name) return;
 
-  // Gather inputs
+  // Gather user inputs
   const state = document.getElementById("state_select").value;
-  const adjustCosts = document.getElementById("adjust_costs").value;
+  const adjust_costs = document.getElementById("adjust_costs").value;
   const cost_val = parseInt(document.getElementById("cost_slider").value, 10);
 
-  // Checkboxes
-  const localSelected = document.getElementById("local_cb").checked;
-  const widerSelected = document.getElementById("wider_cb").checked;
-  const weeklySelected = document.getElementById("weekly_cb").checked;
-  const monthlySelected = document.getElementById("monthly_cb").checked;
-  const virtualSelected = document.getElementById("virtual_cb").checked;
-  const hybridSelected = document.getElementById("hybrid_cb").checked;
-  const twoHSelected = document.getElementById("twoH_cb").checked;
-  const fourHSelected = document.getElementById("fourH_cb").checked;
-  const commSelected = document.getElementById("comm_cb").checked;
-  const psychSelected = document.getElementById("psych_cb").checked;
-  const vrSelected = document.getElementById("vr_cb").checked;
+  const local_cb = document.getElementById("local_cb").checked;
+  const wider_cb = document.getElementById("wider_cb").checked;
+  const weekly_cb = document.getElementById("weekly_cb").checked;
+  const monthly_cb = document.getElementById("monthly_cb").checked;
+  const virtual_cb = document.getElementById("virtual_cb").checked;
+  const hybrid_cb = document.getElementById("hybrid_cb").checked;
+  const twoH_cb = document.getElementById("twoH_cb").checked;
+  const fourH_cb = document.getElementById("fourH_cb").checked;
+  const comm_cb = document.getElementById("comm_cb").checked;
+  const psych_cb = document.getElementById("psych_cb").checked;
+  const vr_cb = document.getElementById("vr_cb").checked;
 
-  // Quick validation for contradictory selections
-  if (localSelected && widerSelected) {
-    alert("Cannot select both Local Area and Wider Community for one scenario.");
+  // Basic constraints
+  if (local_cb && wider_cb) {
+    alert("Cannot select both Local Area and Wider Community.");
     return;
   }
-  if (weeklySelected && monthlySelected) {
-    alert("Cannot select both Weekly and Monthly for one scenario.");
+  if (weekly_cb && monthly_cb) {
+    alert("Cannot select both Weekly and Monthly.");
     return;
   }
-  if (twoHSelected && fourHSelected) {
-    alert("Cannot select both 2-Hour and 4-Hour sessions for one scenario.");
+  if (twoH_cb && fourH_cb) {
+    alert("Cannot select both 2-Hour and 4-Hour sessions.");
     return;
   }
-  
-  // Make scenario object
+
+  if (adjust_costs === 'yes' && !state) {
+    alert("Please select a state if adjusting costs for living.");
+    return;
+  }
+
+  // Build scenario object
   const scenario = {
-    name: scenarioName,
+    name,
     state,
-    adjustCosts,
+    adjust_costs,
     cost_val,
-    localSelected,
-    widerSelected,
-    weeklySelected,
-    monthlySelected,
-    virtualSelected,
-    hybridSelected,
-    twoHSelected,
-    fourHSelected,
-    commSelected,
-    psychSelected,
-    vrSelected
+    local_cb,
+    wider_cb,
+    weekly_cb,
+    monthly_cb,
+    virtual_cb,
+    hybrid_cb,
+    twoH_cb,
+    fourH_cb,
+    comm_cb,
+    psych_cb,
+    vr_cb
   };
 
   scenarioList.push(scenario);
   updateScenarioTable();
 }
 
-/************************************************************
- * UPDATE SCENARIO TABLE
- ************************************************************/
+/****************************************************************************
+ * 5) SCENARIO TABLE
+ ****************************************************************************/
 function updateScenarioTable() {
-  const tbody = document.getElementById("scenarioTable").querySelector("tbody");
-  tbody.innerHTML = "";
-  
-  scenarioList.forEach(sc => {
-    const row = document.createElement("tr");
+  const tb = document.getElementById("scenarioTable").querySelector("tbody");
+  tb.innerHTML = "";
+  scenarioList.forEach(s => {
+    let row = document.createElement("tr");
     row.innerHTML = `
-      <td>${sc.name}</td>
+      <td>${s.name}</td>
       <td>
-        ${sc.localSelected ? "Local;" : ""}
-        ${sc.widerSelected ? "Wider;" : ""}
-        ${sc.weeklySelected ? "Weekly;" : ""}
-        ${sc.monthlySelected ? "Monthly;" : ""}
-        ${sc.virtualSelected ? "Virtual;" : ""}
-        ${sc.hybridSelected ? "Hybrid;" : ""}
-        ${sc.twoHSelected ? "2Hr;" : ""}
-        ${sc.fourHSelected ? "4Hr;" : ""}
-        ${sc.commSelected ? "CommEng;" : ""}
-        ${sc.psychSelected ? "Psych;" : ""}
-        ${sc.vrSelected ? "VR;" : ""}
+        ${s.local_cb ? "Local;" : ""}
+        ${s.wider_cb ? "Wider;" : ""}
+        ${s.weekly_cb ? "Weekly;" : ""}
+        ${s.monthly_cb ? "Monthly;" : ""}
+        ${s.virtual_cb ? "Virtual;" : ""}
+        ${s.hybrid_cb ? "Hybrid;" : ""}
+        ${s.twoH_cb ? "2hr;" : ""}
+        ${s.fourH_cb ? "4hr;" : ""}
+        ${s.comm_cb ? "Comm;" : ""}
+        ${s.psych_cb ? "Psych;" : ""}
+        ${s.vr_cb ? "VR;" : ""}
       </td>
-      <td>${sc.state || "-"}</td>
-      <td>${sc.adjustCosts === 'yes' ? "Yes" : "No"}</td>
-      <td>${sc.cost_val}</td>
+      <td>${s.state || '-'}</td>
+      <td>${s.adjust_costs === 'yes' ? 'Yes' : 'No'}</td>
+      <td>${s.cost_val}</td>
     `;
-    tbody.appendChild(row);
+    tb.appendChild(row);
   });
 }
 
-/************************************************************
- * OPEN RESULTS WINDOW (SINGLE SCENARIO)
- ************************************************************/
+/****************************************************************************
+ * 6) BUILD SCENARIO FROM CURRENT INPUTS & OPEN SINGLE-RESULTS WINDOW
+ ****************************************************************************/
 function openResultsWindow() {
-  const scenario = buildScenarioFromCurrentForm();
-  if (!scenario) return; // user canceled or invalid input
-  openResultsPopup([scenario], "Single Scenario Results");
+  const sc = buildScenarioFromCurrentInputs();
+  if (!sc) return;
+  openScenariosWindow([sc], "Single Scenario Results");
 }
 
-/************************************************************
- * OPEN COMPARISON WINDOW (MULTI-SCENARIO)
- ************************************************************/
+/****************************************************************************
+ * 7) COMPARE ALL SCENARIOS
+ ****************************************************************************/
 function openComparisonWindow() {
   if (scenarioList.length === 0) {
-    alert("No saved scenarios to compare!");
+    alert("No saved scenarios to compare.");
     return;
   }
-  openResultsPopup(scenarioList, "Comparison Results");
+  openScenariosWindow(scenarioList, "Comparison of Multiple Scenarios");
 }
 
-/************************************************************
- * BUILD SCENARIO FROM CURRENT FORM (for single 'View Results')
- ************************************************************/
-function buildScenarioFromCurrentForm() {
-  // Gather inputs from the form
+function buildScenarioFromCurrentInputs() {
   const state = document.getElementById("state_select").value;
-  const adjustCosts = document.getElementById("adjust_costs").value;
+  const adjust_costs = document.getElementById("adjust_costs").value;
   const cost_val = parseInt(document.getElementById("cost_slider").value, 10);
 
-  const localSelected = document.getElementById("local_cb").checked;
-  const widerSelected = document.getElementById("wider_cb").checked;
-  const weeklySelected = document.getElementById("weekly_cb").checked;
-  const monthlySelected = document.getElementById("monthly_cb").checked;
-  const virtualSelected = document.getElementById("virtual_cb").checked;
-  const hybridSelected = document.getElementById("hybrid_cb").checked;
-  const twoHSelected = document.getElementById("twoH_cb").checked;
-  const fourHSelected = document.getElementById("fourH_cb").checked;
-  const commSelected = document.getElementById("comm_cb").checked;
-  const psychSelected = document.getElementById("psych_cb").checked;
-  const vrSelected = document.getElementById("vr_cb").checked;
+  const local_cb = document.getElementById("local_cb").checked;
+  const wider_cb = document.getElementById("wider_cb").checked;
+  const weekly_cb = document.getElementById("weekly_cb").checked;
+  const monthly_cb = document.getElementById("monthly_cb").checked;
+  const virtual_cb = document.getElementById("virtual_cb").checked;
+  const hybrid_cb = document.getElementById("hybrid_cb").checked;
+  const twoH_cb = document.getElementById("twoH_cb").checked;
+  const fourH_cb = document.getElementById("fourH_cb").checked;
+  const comm_cb = document.getElementById("comm_cb").checked;
+  const psych_cb = document.getElementById("psych_cb").checked;
+  const vr_cb = document.getElementById("vr_cb").checked;
 
-  if (localSelected && widerSelected) {
-    alert("Cannot select both Local Area and Wider Community for a single scenario.");
+  // Same constraints
+  if (local_cb && wider_cb) {
+    alert("Cannot select both Local Area and Wider Community.");
     return null;
   }
-  if (weeklySelected && monthlySelected) {
-    alert("Cannot select both Weekly and Monthly for a single scenario.");
+  if (weekly_cb && monthly_cb) {
+    alert("Cannot select both Weekly and Monthly.");
     return null;
   }
-  if (twoHSelected && fourHSelected) {
-    alert("Cannot select both 2-Hour and 4-Hour sessions for a single scenario.");
+  if (twoH_cb && fourH_cb) {
+    alert("Cannot select both 2-Hour and 4-Hour.");
+    return null;
+  }
+  if (adjust_costs === 'yes' && !state) {
+    alert("Please select a state if adjusting costs for living.");
     return null;
   }
 
   return {
-    name: "CurrentForm",
+    name: "Current Selection",
     state,
-    adjustCosts,
+    adjust_costs,
     cost_val,
-    localSelected,
-    widerSelected,
-    weeklySelected,
-    monthlySelected,
-    virtualSelected,
-    hybridSelected,
-    twoHSelected,
-    fourHSelected,
-    commSelected,
-    psychSelected,
-    vrSelected
+    local_cb,
+    wider_cb,
+    weekly_cb,
+    monthly_cb,
+    virtual_cb,
+    hybrid_cb,
+    twoH_cb,
+    fourH_cb,
+    comm_cb,
+    psych_cb,
+    vr_cb
   };
 }
 
-/************************************************************
- * OPEN A NEW WINDOW WITH RESULTS/COMPARISON
- * (Displays dynamic charts, WTP, predicted probabilities)
- ************************************************************/
-function openResultsPopup(scenarios, windowTitle) {
-  // Generate a new window
-  const w = window.open("", "_blank", "width=1400,height=800,scrollbars=yes,resizable=yes");
+/****************************************************************************
+ * 8) OPEN NEW WINDOW WITH SCENARIOS (INCLUDES WTP & CHARTS)
+ ****************************************************************************/
+function openScenariosWindow(scenarios, titleText) {
+  const w = window.open("", "_blank", "width=1200,height=800,resizable,scrollbars");
   if (!w) {
     alert("Please allow popups in your browser settings.");
     return;
   }
 
-  // Write the basic HTML structure
   w.document.write(`
+    <!DOCTYPE html>
     <html>
     <head>
-      <title>${windowTitle}</title>
+      <meta charset="UTF-8"/>
+      <title>${titleText}</title>
       <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1, h2, h3 { color: #2c3e50; text-align: center; }
-        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #2980b9; color: #fff; }
-        .chart-box { width: 100%; height: 400px; margin-top: 20px; }
-        .buttons-row { text-align: center; margin-top: 20px; }
-        button { background: #2980b9; color: #fff; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #1f6391; }
-        .intro-text { text-align: center; margin: 10px 0; }
-        .loneliness-info { background: #f9f9f9; padding: 10px; margin-top: 10px; border-left: 4px solid #f39c12; }
+        body {
+          margin: 20px; 
+          font-family: Arial, sans-serif; 
+          background: #f4f7fa;
+        }
+        h1, h2 {
+          text-align: center;
+          color: #2c3e50;
+        }
+        .scenario-box {
+          background: #fff;
+          padding: 15px;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          margin: 20px 0;
+        }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background: #2980b9; color: #fff; }
+        .charts-wrap {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-around;
+          gap: 20px;
+          margin-top: 20px;
+        }
+        .chart-box {
+          width: 360px;
+          height: 300px;
+          background: #fff;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+          padding: 10px;
+          position: relative;
+        }
+        .buttons-row {
+          text-align: center;
+          margin: 20px 0;
+        }
+        button {
+          background: #2980b9;
+          color: #fff;
+          border: none;
+          padding: 10px 15px;
+          border-radius: 5px;
+          cursor: pointer;
+          margin: 0 5px;
+        }
+        button:hover {
+          background: #1f6391;
+        }
+        .loneliness-note {
+          background: #f9efdb;
+          padding: 10px;
+          margin: 10px 0;
+          border-left: 4px solid #e67e22;
+        }
       </style>
     </head>
     <body>
-      <h1>${windowTitle}</h1>
-      <p class="intro-text">
-        These results show the predicted probabilities of programme uptake and 
-        willingness to pay (WTP) for each scenario, alongside separate analyses 
-        by loneliness category (Not Lonely, Moderately Lonely, Severely Lonely).
+      <h1>${titleText}</h1>
+      <p class="loneliness-note">
+        This analysis considers different loneliness categories (Not Lonely, Moderately Lonely, and Severely Lonely) 
+        based on the De Jong Gierveld Loneliness Scale. Negative coefficients reduce utility, while positive 
+        coefficients increase utility; cost coefficients are negative.
       </p>
-      <div class="loneliness-info">
-        <strong>Loneliness Categories</strong>: 
-        Derived from the De Jong Gierveld Loneliness Scale, 
-        which measures both emotional and social loneliness. 
-        Individuals are then grouped into Not Lonely, Moderately Lonely, or Severely Lonely 
-        based on their total loneliness scores.
-      </div>
-      <div id="scenarioContainer"></div>
+
+      <div id="mainContent"></div>
       <div class="buttons-row">
         <button onclick="downloadPDF()">Download PDF</button>
       </div>
 
-      <!-- Scripts for Chart + PDF generation in new window -->
+      <!-- Chart.js + jsPDF in new window -->
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-      
+
       <script>
-        const scenariosData = ${JSON.stringify(scenarios)};
+        const scenarioData = ${JSON.stringify(scenarios)};
+        const finalCoefs = ${JSON.stringify(finalCoefficients)};
+        const multipliers = ${JSON.stringify(costOfLivingMultipliers)};
 
-        // Coefficients & cost-of-living from parent window
-        const finalCoefficients = ${JSON.stringify(finalCoefficients)};
-        const costOfLivingMultipliers = ${JSON.stringify(costOfLivingMultipliers)};
+        // Example significance + WTP array if desired:
+        const attributeInfo = [
+          { name: "Community Engagement", pVal: 0.000, significance: "***" },
+          { name: "Psychological Counselling", pVal: 0.245, significance: "" },
+          { name: "Virtual Reality", pVal: 0.009, significance: "**" },
+          { name: "Virtual Only (Method)", pVal: 0.019, significance: "**" },
+          { name: "Hybrid (Method)", pVal: 0.001, significance: "***" },
+          { name: "Weekly", pVal: 0.000, significance: "***" },
+          { name: "Monthly", pVal: 0.005, significance: "**" },
+          { name: "2-Hour", pVal: 0.059, significance: "" },
+          { name: "4-Hour", pVal: 0.037, significance: "*" },
+          { name: "Local Area", pVal: 0.712, significance: "" },
+          { name: "Wider Community", pVal: 0.000, significance: "***" },
+          // Cost coefficient is separate
+        ];
 
-        // Container references
-        const container = document.getElementById("scenarioContainer");
-        
-        // On load, build scenario tables, charts
         window.onload = function() {
-          buildScenarioViews();
+          buildAllScenarioViews();
         };
 
-        function buildScenarioViews() {
-          scenariosData.forEach((sc, index) => {
-            // Build a separate area for each scenario
-            const div = document.createElement("div");
-            div.style.margin = "30px 0";
+        function buildAllScenarioViews() {
+          const container = document.getElementById("mainContent");
+          scenarioData.forEach((sc, idx) => {
+            const box = document.createElement("div");
+            box.className = "scenario-box";
 
-            const header = document.createElement("h2");
-            header.textContent = sc.name;
-            div.appendChild(header);
+            const h2 = document.createElement("h2");
+            h2.textContent = sc.name;
+            box.appendChild(h2);
 
-            // Show key inputs
-            const table = document.createElement("table");
-            table.innerHTML = \`<thead>
-              <tr><th>Attribute</th><th>Value</th></tr>
-            </thead><tbody>
-              <tr><td>State</td><td>\${sc.state || "-"}</td></tr>
-              <tr><td>Adjust Costs?</td><td>\${sc.adjustCosts}</td></tr>
-              <tr><td>Cost (AUD)</td><td>\${sc.cost_val}</td></tr>
-              <tr><td>Local Area?</td><td>\${sc.localSelected}</td></tr>
-              <tr><td>Wider Community?</td><td>\${sc.widerSelected}</td></tr>
-              <tr><td>Weekly?</td><td>\${sc.weeklySelected}</td></tr>
-              <tr><td>Monthly?</td><td>\${sc.monthlySelected}</td></tr>
-              <tr><td>Virtual Only?</td><td>\${sc.virtualSelected}</td></tr>
-              <tr><td>Hybrid?</td><td>\${sc.hybridSelected}</td></tr>
-              <tr><td>2-Hour?</td><td>\${sc.twoHSelected}</td></tr>
-              <tr><td>4-Hour?</td><td>\${sc.fourHSelected}</td></tr>
-              <tr><td>Community Engagement?</td><td>\${sc.commSelected}</td></tr>
-              <tr><td>Psych Counselling?</td><td>\${sc.psychSelected}</td></tr>
-              <tr><td>Virtual Reality?</td><td>\${sc.vrSelected}</td></tr>
-            </tbody>\`;
-            div.appendChild(table);
-
-            // Probability + charts
-            const chartContainer = document.createElement("div");
-            chartContainer.style.display = "flex";
-            chartContainer.style.flexWrap = "wrap";
-            chartContainer.style.justifyContent = "space-around";
-            
-            // MAIN Probability chart
-            const mainProbCanvas = document.createElement("canvas");
-            mainProbCanvas.id = "mainProb_" + index;
-            mainProbCanvas.className = "chart-box";
-            chartContainer.appendChild(mainProbCanvas);
-
-            // By Categories: Not Lonely, Moderately Lonely, Severely Lonely
-            const catNotLonely = document.createElement("canvas");
-            catNotLonely.id = "catNotLonely_" + index;
-            catNotLonely.className = "chart-box";
-            chartContainer.appendChild(catNotLonely);
-
-            const catModLonely = document.createElement("canvas");
-            catModLonely.id = "catModLonely_" + index;
-            catModLonely.className = "chart-box";
-            chartContainer.appendChild(catModLonely);
-
-            const catSevLonely = document.createElement("canvas");
-            catSevLonely.id = "catSevLonely_" + index;
-            catSevLonely.className = "chart-box";
-            chartContainer.appendChild(catSevLonely);
-
-            div.appendChild(chartContainer);
-
-            // Compute + display predicted probabilities
-            const resultsP = document.createElement("p");
-            resultsP.style.textAlign = "center";
-            const mainProb = computeProbability(sc, finalCoefficients.main);
-            const notLonelyProb = computeProbability(sc, finalCoefficients.notLonely);
-            const modLonelyProb = computeProbability(sc, finalCoefficients.moderatelyLonely);
-            const sevLonelyProb = computeProbability(sc, finalCoefficients.severelyLonely);
-
-            resultsP.innerHTML = \`
-              <strong>Main Probability:</strong> \${(mainProb*100).toFixed(2)}% &nbsp; 
-              | <strong>Not Lonely:</strong> \${(notLonelyProb*100).toFixed(2)}% &nbsp; 
-              | <strong>Moderately Lonely:</strong> \${(modLonelyProb*100).toFixed(2)}% &nbsp; 
-              | <strong>Severely Lonely:</strong> \${(sevLonelyProb*100).toFixed(2)}%
+            // Show scenario table
+            const scenarioTable = document.createElement("table");
+            scenarioTable.innerHTML = \`
+              <thead>
+                <tr><th>Attribute</th><th>Value</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>State</td><td>\${sc.state||'-'}</td></tr>
+                <tr><td>Cost of Living Adjust?</td><td>\${sc.adjust_costs}</td></tr>
+                <tr><td>Cost (AUD)</td><td>\${sc.cost_val}</td></tr>
+                <tr><td>Local Area?</td><td>\${sc.local_cb}</td></tr>
+                <tr><td>Wider Community?</td><td>\${sc.wider_cb}</td></tr>
+                <tr><td>Weekly?</td><td>\${sc.weekly_cb}</td></tr>
+                <tr><td>Monthly?</td><td>\${sc.monthly_cb}</td></tr>
+                <tr><td>Virtual Only?</td><td>\${sc.virtual_cb}</td></tr>
+                <tr><td>Hybrid?</td><td>\${sc.hybrid_cb}</td></tr>
+                <tr><td>2-Hour?</td><td>\${sc.twoH_cb}</td></tr>
+                <tr><td>4-Hour?</td><td>\${sc.fourH_cb}</td></tr>
+                <tr><td>Community Engagement?</td><td>\${sc.comm_cb}</td></tr>
+                <tr><td>Psych Counselling?</td><td>\${sc.psych_cb}</td></tr>
+                <tr><td>Virtual Reality?</td><td>\${sc.vr_cb}</td></tr>
+              </tbody>
             \`;
-            div.appendChild(resultsP);
+            box.appendChild(scenarioTable);
 
-            // Create charts
-            buildDoughnutChart(mainProbCanvas, "Main Probability", mainProb);
-            buildDoughnutChart(catNotLonely, "Not Lonely", notLonelyProb);
-            buildDoughnutChart(catModLonely, "Moderately Lonely", modLonelyProb);
-            buildDoughnutChart(catSevLonely, "Severely Lonely", sevLonelyProb);
+            // Show predicted probabilities
+            const pMain = computeProbability(sc, finalCoefs.main);
+            const pNotLonely = computeProbability(sc, finalCoefs.notLonely);
+            const pModLonely = computeProbability(sc, finalCoefs.moderatelyLonely);
+            const pSevLonely = computeProbability(sc, finalCoefs.severelyLonely);
 
-            container.appendChild(div);
+            // Show WTP table for main model (just an example)
+            const wtpTable = document.createElement("table");
+            wtpTable.innerHTML = \`<thead><tr><th>Attribute</th><th>Coefficient</th><th>p-value</th><th>Significance</th><th>WTP (AUD)</th></tr></thead><tbody></tbody>\`;
+            const tBody = wtpTable.querySelector("tbody");
+
+            // We'll do a few attribute examples here
+            const mainCostCoef = finalCoefs.main.cost_cont; 
+            if (mainCostCoef === 0) {
+              // avoid division by zero
+            } else {
+              attributeInfo.forEach(attr => {
+                // We'll match the attribute name to finalCoefs if possible
+                let aCoef = 0;
+                if (attr.name === "Community Engagement") aCoef = finalCoefs.main.type_comm;
+                if (attr.name === "Psychological Counselling") aCoef = finalCoefs.main.type_psych;
+                if (attr.name === "Virtual Reality") aCoef = finalCoefs.main.type_vr;
+                if (attr.name === "Virtual Only (Method)") aCoef = finalCoefs.main.mode_virtual;
+                if (attr.name === "Hybrid (Method)") aCoef = finalCoefs.main.mode_hybrid;
+                if (attr.name === "Weekly") aCoef = finalCoefs.main.freq_weekly;
+                if (attr.name === "Monthly") aCoef = finalCoefs.main.freq_monthly;
+                if (attr.name === "2-Hour") aCoef = finalCoefs.main.dur_2hrs;
+                if (attr.name === "4-Hour") aCoef = finalCoefs.main.dur_4hrs;
+                if (attr.name === "Local Area") aCoef = finalCoefs.main.dist_local;
+                if (attr.name === "Wider Community") aCoef = finalCoefs.main.dist_signif;
+
+                const wtp = computeWTP(aCoef, mainCostCoef);
+                const row = document.createElement("tr");
+                row.innerHTML = \`
+                  <td>\${attr.name}</td>
+                  <td>\${aCoef.toFixed(3)}</td>
+                  <td>\${attr.pVal.toFixed(3)}</td>
+                  <td>\${attr.significance}</td>
+                  <td>\${wtp.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+                \`;
+                tBody.appendChild(row);
+              });
+            }
+
+            // Also add cost row as reference
+            const costRow = document.createElement("tr");
+            costRow.innerHTML = \`
+              <td>Cost per Session</td>
+              <td>\${mainCostCoef.toFixed(3)}</td>
+              <td>0.000</td>
+              <td>***</td>
+              <td>Reference</td>
+            \`;
+            tBody.appendChild(costRow);
+
+            // Probability text
+            const pBox = document.createElement("p");
+            pBox.innerHTML = \`
+              <strong>Main Prob:</strong> \${(pMain*100).toFixed(2)}% 
+              | <strong>Not Lonely:</strong> \${(pNotLonely*100).toFixed(2)}% 
+              | <strong>Moderately Lonely:</strong> \${(pModLonely*100).toFixed(2)}%
+              | <strong>Severely Lonely:</strong> \${(pSevLonely*100).toFixed(2)}%
+            \`;
+            box.appendChild(pBox);
+
+            // Append the WTP table
+            box.appendChild(wtpTable);
+
+            // Charts
+            const chartWrap = document.createElement("div");
+            chartWrap.className = "charts-wrap";
+            
+            // 1) Main Probability
+            chartWrap.appendChild(buildChartCanvas(`mainProb_${idx}`, "Main Probability", pMain));
+            // 2) Not Lonely
+            chartWrap.appendChild(buildChartCanvas(`notLonely_${idx}`, "Not Lonely Probability", pNotLonely));
+            // 3) Moderately Lonely
+            chartWrap.appendChild(buildChartCanvas(`modLonely_${idx}`, "Moderately Lonely Probability", pModLonely));
+            // 4) Severely Lonely
+            chartWrap.appendChild(buildChartCanvas(`sevLonely_${idx}`, "Severely Lonely Probability", pSevLonely));
+            
+            box.appendChild(chartWrap);
+            container.appendChild(box);
+          });
+
+          // After DOM is built, init the charts
+          scenarioData.forEach((sc, idx) => {
+            initDoughnut(`mainProb_${idx}`, computeProbability(sc, finalCoefs.main));
+            initDoughnut(`notLonely_${idx}`, computeProbability(sc, finalCoefs.notLonely));
+            initDoughnut(`modLonely_${idx}`, computeProbability(sc, finalCoefs.moderatelyLonely));
+            initDoughnut(`sevLonely_${idx}`, computeProbability(sc, finalCoefs.severelyLonely));
           });
         }
 
-        function computeProbability(sc, coef) {
-          // Adjust cost
-          let finalCost = sc.cost_val;
-          if (sc.adjustCosts === "yes" && sc.state && costOfLivingMultipliers[sc.state]) {
-            finalCost = sc.cost_val * costOfLivingMultipliers[sc.state];
-          }
-          // Build inputs (1 or 0) for each attribute
-          const dist_local = sc.localSelected ? 1 : 0;
-          const dist_signif = sc.widerSelected ? 1 : 0;
-          const freq_weekly = sc.weeklySelected ? 1 : 0;
-          const freq_monthly = sc.monthlySelected ? 1 : 0;
-          const mode_virtual = sc.virtualSelected ? 1 : 0;
-          const mode_hybrid = sc.hybridSelected ? 1 : 0;
-          const dur_2hrs = sc.twoHSelected ? 1 : 0;
-          const dur_4hrs = sc.fourHSelected ? 1 : 0;
-          const type_comm = sc.commSelected ? 1 : 0;
-          const type_psych = sc.psychSelected ? 1 : 0;
-          const type_vr = sc.vrSelected ? 1 : 0;
-
-          const U_alt = coef.ASC_mean
-             + coef.type_comm * type_comm
-             + coef.type_psych * type_psych
-             + coef.type_vr * type_vr
-             + coef.mode_virtual * mode_virtual
-             + coef.mode_hybrid * mode_hybrid
-             + coef.freq_weekly * freq_weekly
-             + coef.freq_monthly * freq_monthly
-             + coef.dur_2hrs * dur_2hrs
-             + coef.dur_4hrs * dur_4hrs
-             + coef.dist_local * dist_local
-             + coef.dist_signif * dist_signif
-             + coef.cost_cont * finalCost;
-
-          const U_optout = coef.ASC_optout;
-          const exp_alt = Math.exp(U_alt);
-          const exp_optout = Math.exp(U_optout);
-          return exp_alt / (exp_alt + exp_optout);
+        function buildChartCanvas(id, label, probVal) {
+          const box = document.createElement("div");
+          box.className = "chart-box";
+          const c = document.createElement("canvas");
+          c.id = id;
+          box.appendChild(c);
+          return box;
         }
 
-        function buildDoughnutChart(canvas, title, probability) {
-          new Chart(canvas.getContext("2d"), {
+        function initDoughnut(canvasId, probability) {
+          const ctx = document.getElementById(canvasId).getContext("2d");
+          new Chart(ctx, {
             type: "doughnut",
             data: {
               labels: ["Uptake Probability", "Remaining"],
               datasets: [{
-                data: [probability, 1 - probability],
-                backgroundColor: pickChartColours(probability),
-                borderColor: ["rgba(236, 240, 241, 1)", "rgba(236, 240, 241, 1)"],
+                data: [probability, 1-probability],
+                backgroundColor: pickColours(probability),
+                borderColor: "#fff",
                 borderWidth: 1
               }]
             },
@@ -495,69 +550,115 @@ function openResultsPopup(scenarios, windowTitle) {
               responsive: true,
               maintainAspectRatio: false,
               plugins: {
-                legend: { position: "bottom" },
-                title: {
-                  display: true,
-                  text: title + " = " + (probability * 100).toFixed(2) + "%",
-                  font: { size: 16 },
-                  color: "#2c3e50"
-                }
+                legend: { position: "bottom" }
               }
             }
           });
         }
 
-        function pickChartColours(prob) {
-          if (prob < 0.3) {
-            return ["rgba(231, 76, 60, 0.6)", "rgba(236, 240, 241, 0.3)"];
-          } else if (prob < 0.7) {
-            return ["rgba(241, 196, 15, 0.6)", "rgba(236, 240, 241, 0.3)"];
+        function pickColours(p) {
+          if (p < 0.3) {
+            return ["rgba(231, 76, 60, 0.7)", "rgba(236, 240, 241, 0.3)"];
+          } else if (p < 0.7) {
+            return ["rgba(241, 196, 15, 0.7)", "rgba(236, 240, 241, 0.3)"];
           } else {
-            return ["rgba(39, 174, 96, 0.6)", "rgba(236, 240, 241, 0.3)"];
+            return ["rgba(39, 174, 96, 0.7)", "rgba(236, 240, 241, 0.3)"];
           }
         }
 
-        // Download PDF with charts
-        function downloadPDF() {
-          const { jsPDF } = window.jspdf;
-          const pdf = new jsPDF("p", "pt", "a4");
-          pdf.setFontSize(14);
-          pdf.text("${windowTitle}", 40, 40);
-          let yPos = 70;
+        function computeProbability(scenario, coefs) {
+          // Adjust cost
+          let finalCost = scenario.cost_val;
+          if (scenario.adjust_costs === "yes" && scenario.state && multipliers[scenario.state]) {
+            finalCost = scenario.cost_val * multipliers[scenario.state];
+          }
 
-          // For each scenario: add some text + 4 charts (base64)
-          scenariosData.forEach((sc, idx) => {
-            pdf.setFontSize(12);
-            pdf.text("Scenario: " + sc.name, 40, yPos);
-            yPos += 20;
+          const dist_local = scenario.local_cb ? 1 : 0;
+          const dist_signif = scenario.wider_cb ? 1 : 0;
+          const freq_weekly = scenario.weekly_cb ? 1 : 0;
+          const freq_monthly = scenario.monthly_cb ? 1 : 0;
+          const mode_virtual = scenario.virtual_cb ? 1 : 0;
+          const mode_hybrid = scenario.hybrid_cb ? 1 : 0;
+          const dur_2hrs = scenario.twoH_cb ? 1 : 0;
+          const dur_4hrs = scenario.fourH_cb ? 1 : 0;
+          const type_comm = scenario.comm_cb ? 1 : 0;
+          const type_psych = scenario.psych_cb ? 1 : 0;
+          const type_vr = scenario.vr_cb ? 1 : 0;
+
+          const U_alt = coefs.ASC_mean
+            + coefs.type_comm * type_comm
+            + coefs.type_psych * type_psych
+            + coefs.type_vr * type_vr
+            + coefs.mode_virtual * mode_virtual
+            + coefs.mode_hybrid * mode_hybrid
+            + coefs.freq_weekly * freq_weekly
+            + coefs.freq_monthly * freq_monthly
+            + coefs.dur_2hrs * dur_2hrs
+            + coefs.dur_4hrs * dur_4hrs
+            + coefs.dist_local * dist_local
+            + coefs.dist_signif * dist_signif
+            + coefs.cost_cont * finalCost;
+
+          const U_optout = coefs.ASC_optout;
+          const exp_alt = Math.exp(U_alt);
+          const exp_optout = Math.exp(U_optout);
+          return exp_alt / (exp_alt + exp_optout);
+        }
+
+        function computeWTP(attributeCoef, costCoef) {
+          if (costCoef === 0) return 0;
+          return - attributeCoef / costCoef; 
+        }
+
+        async function downloadPDF() {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF('p','pt','a4');
+          pdf.setFontSize(14);
+          pdf.text("${titleText}", 40, 40);
+
+          let yOff = 60;
+          
+          const scenarioDivs = document.getElementsByClassName("scenario-box");
+          for (let i=0; i<scenarioDivs.length; i++) {
+            // Add a page for each scenario
+            if (i>0) pdf.addPage();
+            yOff = 40;
+            pdf.text(scenarioData[i].name, 40, yOff);
+            yOff += 10;
             
-            // Grab canvases: #mainProb_idx, #catNotLonely_idx, ...
-            // Convert them to images + add to PDF
-            const mainCanvas = document.getElementById("mainProb_" + idx);
+            // Convert each chart to an image + add
+            const mainProbID = "mainProb_" + i;
+            const notLonelyID = "notLonely_" + i;
+            const modLonelyID = "modLonely_" + i;
+            const sevLonelyID = "sevLonely_" + i;
+
+            const mainCanvas = document.getElementById(mainProbID);
             if (mainCanvas) {
               const mainImg = mainCanvas.toDataURL("image/png");
-              pdf.addImage(mainImg, "PNG", 40, yPos, 200, 200);
+              pdf.addImage(mainImg, "PNG", 40, yOff, 200, 200);
             }
-            const catNL = document.getElementById("catNotLonely_" + idx);
-            if (catNL) {
-              const catNLImg = catNL.toDataURL("image/png");
-              pdf.addImage(catNLImg, "PNG", 300, yPos, 200, 200);
+            const notLonelyCanvas = document.getElementById(notLonelyID);
+            if (notLonelyCanvas) {
+              const notLonelyImg = notLonelyCanvas.toDataURL("image/png");
+              pdf.addImage(notLonelyImg, "PNG", 300, yOff, 200, 200);
             }
-            yPos += 220; 
-            const catML = document.getElementById("catModLonely_" + idx);
-            if (catML) {
-              const catMLImg = catML.toDataURL("image/png");
-              pdf.addImage(catMLImg, "PNG", 40, yPos, 200, 200);
+            yOff += 220;
+            if (modLonelyID) {
+              const modCanvas = document.getElementById(modLonelyID);
+              if (modCanvas) {
+                const modImg = modCanvas.toDataURL("image/png");
+                pdf.addImage(modImg, "PNG", 40, yOff, 200, 200);
+              }
             }
-            const catSL = document.getElementById("catSevLonely_" + idx);
-            if (catSL) {
-              const catSLImg = catSL.toDataURL("image/png");
-              pdf.addImage(catSLImg, "PNG", 300, yPos, 200, 200);
+            if (sevLonelyID) {
+              const sevCanvas = document.getElementById(sevLonelyID);
+              if (sevCanvas) {
+                const sevImg = sevCanvas.toDataURL("image/png");
+                pdf.addImage(sevImg, "PNG", 300, yOff, 200, 200);
+              }
             }
-            yPos += 250; 
-            pdf.addPage(); 
-            yPos = 70;
-          });
+            yOff += 260;
+          }
 
           pdf.save("LonelyLessAustralia_Results.pdf");
         }
@@ -565,10 +666,5 @@ function openResultsPopup(scenarios, windowTitle) {
     </body>
     </html>
   `);
-
   w.document.close();
 }
-
-/************************************************************
- * END OF NEW WINDOW LOGIC
- ************************************************************/
