@@ -1,79 +1,29 @@
-/* Body & Container */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f7fa;
-}
-.container {
-  width: 95%;
-  max-width: 1100px;
-  margin: 20px auto;
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  padding: 20px 30px;
-}
-
-/* Header */
-header h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #2c3e50;
+/**
+ * Simple tab-switching functionality. 
+ * Each tab is identified by an ID, and each button calls openTab(tabId, buttonElement).
+ */
+function openTab(tabId, element) {
+  // Hide all tabcontent sections
+  const tabs = document.getElementsByClassName("tabcontent");
+  for (let i = 0; i < tabs.length; i++) {
+    tabs[i].style.display = "none";
+  }
+  // Remove 'active' class from all tablink buttons
+  const buttons = document.getElementsByClassName("tablink");
+  for (let j = 0; j < buttons.length; j++) {
+    buttons[j].classList.remove("active");
+  }
+  // Show requested tab, make button active
+  document.getElementById(tabId).style.display = "block";
+  element.classList.add("active");
 }
 
-/* Tabs */
-.tabs {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-.tablink {
-  background: #ddd;
-  border: none;
-  padding: 10px 20px;
-  margin: 0 2px;
-  cursor: pointer;
-  font-size: 1em;
-  transition: 0.3s;
-}
-.tablink:hover {
-  background: #ccc;
-}
-.tablink.active {
-  background: #2980b9;
-  color: #fff;
-}
+/**
+ * Additional custom logic (e.g., scenario saving, 
+ * probability calculations, PDFs, etc.) can be added here.
+ */
 
-/* Tab Content */
-.tabcontent {
-  display: none; /* Hidden by default; shown by JS */
-  padding: 10px 0;
-}
-
-/* Introduction Box */
-.intro-box {
-  background-color: #e8f4fd;
-  padding: 20px;
-  border-left: 5px solid #3498db;
-  border-radius: 4px;
-  font-size: 1.1em;
-  line-height: 1.5em;
-}
-
-/* Example Boxes for demonstration */
-.example-box {
-  background: #fafafa;
-  padding: 10px;
-  margin: 20px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* Footer */
-footer {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 0.9em;
-  color: #7f8c8d;
-}
+// For instance, a default load to the Introduction tab (optional):
+// window.onload = () => {
+//   openTab('introTab', document.querySelector('.tablink'));
+// };
