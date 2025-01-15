@@ -1,32 +1,29 @@
 /**
- * This script handles the tab-switching functionality.
- * Each tab is associated with a div of class "tabcontent".
- * Each button is a "tablink" that calls openTab() with its target content ID.
+ * Simple tab-switching functionality. 
+ * Each tab is identified by an ID, and each button calls openTab(tabId, buttonElement).
  */
-
-// Switch between tabs
 function openTab(tabId, element) {
-  // Hide all .tabcontent
-  const allTabs = document.getElementsByClassName("tabcontent");
-  for (let i = 0; i < allTabs.length; i++) {
-    allTabs[i].style.display = "none";
+  // Hide all tabcontent sections
+  const tabs = document.getElementsByClassName("tabcontent");
+  for (let i = 0; i < tabs.length; i++) {
+    tabs[i].style.display = "none";
   }
-  // Remove "active" class from all .tablink buttons
-  const allTabLinks = document.getElementsByClassName("tablink");
-  for (let j = 0; j < allTabLinks.length; j++) {
-    allTabLinks[j].classList.remove("active");
+  // Remove 'active' class from all tablink buttons
+  const buttons = document.getElementsByClassName("tablink");
+  for (let j = 0; j < buttons.length; j++) {
+    buttons[j].classList.remove("active");
   }
-  // Show the requested tab, set this button to active
+  // Show requested tab, make button active
   document.getElementById(tabId).style.display = "block";
   element.classList.add("active");
 }
 
 /**
- * Any additional code (e.g., logic for scenario saving, 
- * dynamic chart creation, DCE calculations) can go here.
+ * Additional custom logic (e.g., scenario saving, 
+ * probability calculations, PDFs, etc.) can be added here.
  */
 
-// Example: we can set a default tab on page load if we like:
-// window.onload = function() {
+// For instance, a default load to the Introduction tab (optional):
+// window.onload = () => {
 //   openTab('introTab', document.querySelector('.tablink'));
 // };
