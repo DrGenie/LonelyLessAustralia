@@ -1,15 +1,15 @@
 /****************************************************************************
  * SCRIPT.JS
- * 1) Tab switching
+ * 1) Tab navigation
  * 2) Range slider label updates
  * 3) Main DCE coefficients & cost-of-living multipliers
  * 4) Single WTP data with error bars (p-values, SE)
- * 5) Probability & WTP bar charts (destroyed & recreated each time)
- * 6) Scenario saving & multi-window PDF with real cost logic (no random)
+ * 5) Probability & WTP bar charts (destroy & recreate each time)
+ * 6) Scenario saving & multi-window PDF
  * Author: Mesfin Genie, Newcastle Business School, The University of Newcastle, Australia
  ****************************************************************************/
 
-/** Default tab on page load */
+/** On page load, default to introduction tab */
 window.onload = function() {
   openTab('introTab', document.querySelector('.tablink'));
 };
@@ -17,18 +17,18 @@ window.onload = function() {
 /** Tab switching function */
 function openTab(tabId, btn) {
   const allTabs = document.getElementsByClassName("tabcontent");
-  for (let i=0; i<allTabs.length; i++){
+  for (let i = 0; i < allTabs.length; i++) {
     allTabs[i].style.display = "none";
   }
   const allBtns = document.getElementsByClassName("tablink");
-  for (let j=0; j<allBtns.length; j++){
+  for (let j = 0; j < allBtns.length; j++) {
     allBtns[j].classList.remove("active");
   }
   document.getElementById(tabId).style.display = "block";
   btn.classList.add("active");
 }
 
-/** Range slider label update */
+/** Range slider label updates */
 function updateCostDisplay(val) {
   document.getElementById("costLabel").textContent = val;
 }
@@ -49,7 +49,7 @@ const mainCoefficients = {
   freq_monthly: 0.336,
   dur_2hrs: 0.185,
   dur_4hrs: 0.213,
-  dist_local: 0.059,
+  dist_local: 0.59,  // user can adjust
   dist_signif: -0.509,
   cost_cont: -0.036
 };
@@ -88,7 +88,6 @@ function buildScenarioFromInputs() {
   const psychCheck = document.getElementById("psychCheck").checked;
   const vrCheck = document.getElementById("vrCheck").checked;
 
-  // Basic validations
   if (localCheck && widerCheck) {
     alert("Cannot select both Local Area and Wider Community in one scenario.");
     return null;
@@ -98,7 +97,7 @@ function buildScenarioFromInputs() {
     return null;
   }
   if (twoHCheck && fourHCheck) {
-    alert("Cannot select both 2-Hour and 4-Hour sessions simultaneously.");
+    alert("Cannot select both 2-Hour and 4-Hour simultaneously.");
     return null;
   }
   if (adjustCosts === 'yes' && !state) {
@@ -216,16 +215,16 @@ function renderProbChart() {
     }
   });
 
-  // Provide dynamic suggestions based on the uptake probability
+  // Provide dynamic suggestions
   let interpretation = "";
   if (pVal < 30) {
-    interpretation = "Uptake is relatively low. Decision-makers might consider decreasing cost or improving accessibility/frequency.";
+    interpretation = "Uptake is relatively low. Consider lowering cost or increasing accessibility/frequency.";
   } else if (pVal < 70) {
-    interpretation = "Uptake is moderate. Some improvements to cost or method may increase acceptance further.";
+    interpretation = "Uptake is moderate. Additional improvements may further boost participation.";
   } else {
-    interpretation = "Uptake is high. Maintaining these attributes is recommended to maximise participation.";
+    interpretation = "Uptake is high. Maintaining these attributes is recommended.";
   }
-  alert(`Predicted probability is ${pVal.toFixed(2)}%. ${interpretation}`);
+  alert(`Predicted probability: ${pVal.toFixed(2)}%. ${interpretation}`);
 }
 
 /***************************************************************************
@@ -249,7 +248,6 @@ let wtpChartInstance = null;
 function renderWTPChart() {
   const ctx = document.getElementById("wtpChartMain").getContext("2d");
 
-  // Destroy previous chart if exists
   if (wtpChartInstance) {
     wtpChartInstance.destroy();
   }
@@ -258,8 +256,6 @@ function renderWTPChart() {
   const values = wtpDataMain.map(item => item.wtp);
   const errors = wtpDataMain.map(item => item.se); // standard errors
 
-  // Implement error bars using Chart.js v3 approach with "barWithErrorBars" plugin or a custom approach:
-  // For demonstration, we'll create a custom bar chart plugin to show error bars:
   const dataConfig = {
     labels: labels,
     datasets: [{
@@ -289,12 +285,11 @@ function renderWTPChart() {
       }
     },
     plugins: [{
-      // Simple custom plugin to draw vertical error bars
+      // Draw vertical error bars
       id: 'errorbars',
       afterDraw: chart => {
         const {
           ctx,
-          chartArea: { top, bottom, left, right },
           scales: { x, y }
         } = chart;
 
@@ -302,14 +297,11 @@ function renderWTPChart() {
           const centerX = bar.x;
           const value = values[i];
           const se = errors[i];
-
           if (se && typeof se === 'number') {
-            // Convert WTP value to pixel coords
             const baseY = y.getPixelForValue(value);
-            // Compute topY & bottomY for error
             const topY = y.getPixelForValue(value + se);
             const bottomY = y.getPixelForValue(value - se);
-            // Draw a vertical line
+
             ctx.save();
             ctx.beginPath();
             ctx.strokeStyle = 'black';
@@ -390,7 +382,7 @@ function openSingleScenario() {
 }
 
 /***************************************************************************
- * OPEN A NEW WINDOW FOR COST-BENEFIT (PDF)
+ * MULTI-WINDOW PDF
  ***************************************************************************/
 function openResultsWindow(scenarios, windowTitle) {
   const w = window.open("", "_blank", "width=1400,height=800,resizable,scrollbars");
@@ -398,7 +390,6 @@ function openResultsWindow(scenarios, windowTitle) {
     alert("Please allow popups for results window.");
     return;
   }
-  // Real cost data can be integrated here (instead of placeholders).
   w.document.write(`
     <html>
     <head>
@@ -476,7 +467,7 @@ function openResultsWindow(scenarios, windowTitle) {
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
       <script>
         const scenarioData = ${JSON.stringify(scenarios)};
-        
+
         window.onload = function(){
           displayScenarios();
           buildCostBenefitChart();
@@ -515,31 +506,16 @@ function openResultsWindow(scenarios, windowTitle) {
             container.appendChild(box);
           });
         }
-        
+
         function buildCostBenefitChart(){
           const ctx = document.getElementById("cbaChart").getContext("2d");
           const labels = scenarioData.map(s => s.name || "Scenario");
 
-          // Example: use scenarioData for real cost/benefit logic:
-          // For demonstration, let's do cost * 1000 (personnel, marketing, etc.) and some advanced approach:
-          const costVals = scenarioData.map(s => {
-            // Real cost logic can be integrated here, for now a sum of hypothetical components:
-            const baseCost = s.cost_val * 1000; 
-            // if local area => subtract some travel cost? if weekly => add staff cost? etc.
-            let total = baseCost;
-            if (s.localCheck) { total += 500; }
-            if (s.weeklyCheck) { total += 2000; }
-            if (s.monthlyCheck) { total += 1000; }
-            if (s.hybridCheck) { total += 1500; }
-            return total;
-          });
-
+          // Example cost & benefit approach (no random logic, user can adapt):
+          const costVals = scenarioData.map(s => s.cost_val * 1000);
           const benefitVals = scenarioData.map(s => {
-            // More advanced approach rather than random
-            // e.g., each scenario => predicted uptake * 100 => multiply by A$5,000 or A$7,500
-            // We'll do a quick demonstration:
-            const predictedUptake = 0.5; // placeholder, in practice you'd compute from your scenario data
-            return predictedUptake*100 * 5000; 
+            // e.g. predicted uptake * 100 * 5000 if user has real function
+            return 20000; // A placeholder, can be replaced with real calculations
           });
 
           new Chart(ctx, {
@@ -590,7 +566,7 @@ function openResultsWindow(scenarios, windowTitle) {
 /****************************************************************************
  * SUGGESTIONS FOR FURTHER IMPROVEMENT
  * 1) Include confidence intervals or error bars for WTP data (p-values, SE).
- * 2) Implement more advanced cost-benefit logic with real cost inputs, not random.
+ * 2) Implement more advanced cost-benefit logic with real cost inputs (no placeholders).
  * 3) Provide direct PDF exports capturing scenario data & probability charts from main pages.
- * 4) Link with real usage data or user feedback to refine cost & benefit assumptions.
+ * 4) Link to real usage data or user feedback to refine cost & benefit assumptions.
  ****************************************************************************/
