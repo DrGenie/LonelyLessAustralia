@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>LonelyLessAustralia Decision Aid Tool</title>
   <link rel="stylesheet" href="styles.css"/>
+  <!-- Chart.js Library -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- jsPDF Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -20,7 +22,7 @@
     <button class="tablink" onclick="openTab('attributesTab', this)">Attributes</button>
     <button class="tablink" onclick="openTab('inputsTab', this)">Inputs</button>
     <button class="tablink" onclick="openTab('wtpTab', this)">WTP Results</button>
-    <button class="tablink" onclick="openTab('probTab', this)">Program Uptake Probability</button>
+    <button class="tablink" onclick="openTab('probTab', this)">Programme Uptake Probability</button>
     <button class="tablink" onclick="openTab('costsTab', this)">Costs & Benefits</button>
     <button class="tablink" onclick="openTab('scenariosTab', this)">Scenarios</button>
   </div>
@@ -29,20 +31,16 @@
   <div id="introTab" class="tabcontent" style="display: block;">
     <div class="intro-box">
       <p>
-        Loneliness affects over five million Australians, especially older adults, 
-        resulting in significant health and economic challenges. This tool uses 
-        discrete choice experiment (DCE) estimates to predict programme uptake 
-        probabilities, enabling personalised services based on the attributes older 
-        adults consider most crucial.
+        Loneliness affects over five million Australians, particularly older adults, resulting in significant health and economic challenges. This tool utilises discrete choice experiment (DCE) estimates to predict programme uptake probabilities, enabling personalised services based on the attributes older adults consider most crucial.
       </p>
       <p>Use the tabs above to navigate:</p>
       <ul>
         <li><strong>Instructions</strong> – Guidance for each tool feature.</li>
         <li><strong>Attributes</strong> – Detailed descriptions of the DCE attributes.</li>
         <li><strong>Inputs</strong> – Configure your scenario’s cost, accessibility, frequency, etc.</li>
-        <li><strong>WTP Results</strong> – View a bar chart of main model willingness to pay (A$) with standard errors.</li>
-        <li><strong>Program Uptake Probability</strong> – Dynamically computed chart based on your scenario inputs.</li>
-        <li><strong>Costs &amp; Benefits</strong> – Outlines cost-of-living adjustments and assumptions for benefits.</li>
+        <li><strong>WTP Results</strong> – View bar charts of main model willingness to pay (A$) with standard errors.</li>
+        <li><strong>Programme Uptake Probability</strong> – Dynamically computed chart based on your scenario inputs.</li>
+        <li><strong>Costs &amp; Benefits</strong> – Integrates the new realistic cost items and QALY-based benefits.</li>
         <li><strong>Scenarios</strong> – Save multiple scenarios, compare them, or export PDF-based results.</li>
       </ul>
     </div>
@@ -55,44 +53,44 @@
       1. Check <strong>Attributes</strong> to understand cost, accessibility, frequency, method, duration, and support types.
     </p>
     <p>
-      2. Under <strong>Inputs</strong>, select your state (if any), whether to adjust for cost-of-living, cost per session, 
+      2. In <strong>Inputs</strong>, select your state (if any), whether to adjust for cost-of-living, cost per session, 
       local vs. wider community, weekly vs. monthly, virtual vs. hybrid, session duration, and support type.
     </p>
     <p>
-      3. Click “Calculate &amp; View Results” to open a new window with cost-benefit charts and an optional PDF export. 
+      3. Click “Calculate &amp; View Results” to perform calculations and view cost-benefit analyses.
     </p>
     <p>
-      4. The <strong>WTP Results</strong> tab displays a bar chart summarising the main model’s willingness to pay (A$) for each attribute.
+      4. The <strong>WTP Results</strong> tab displays bar charts summarising the main model’s willingness to pay (A$) for each attribute.
     </p>
     <p>
-      5. The <strong>Program Uptake Probability</strong> tab offers a bar chart for the predicted programme uptake under your current scenario.
+      5. The <strong>Programme Uptake Probability</strong> tab offers a bar chart for the predicted programme uptake under your current scenario.
     </p>
     <p>
-      6. The <strong>Costs &amp; Benefits</strong> tab introduces A$5,000 per 1% improvement as a baseline, with suggestions for an alternative.
+      6. The <strong>Costs &amp; Benefits</strong> tab integrates new data (advertisement, training, delivery, participant time/travel) 
+      and QALY-based benefits for different uptake probabilities.
     </p>
     <p>
-      7. Under <strong>Scenarios</strong>, save multiple configurations, compare them side by side, or export your results to PDF.
+      7. Under <strong>Scenarios</strong>, you can save multiple configurations, compare them side by side, or export your results to PDF.
     </p>
   </div>
 
   <!-- Attributes Tab -->
   <div id="attributesTab" class="tabcontent">
     <h2>Programme Attributes</h2>
-    <p><strong>Cost per session:</strong> The out-of-pocket fee (AUD) that participants must pay every time they attend.</p>
+    <p><strong>Cost per session:</strong> The out-of-pocket fee (AUD) participants must pay each time they attend.</p>
     <p><strong>Accessibility:</strong> Whether the programme is local (up to 12 km) or in a wider community (50+ km), 
       factoring in mobility, transport cost, and convenience.</p>
-    <p><strong>Frequency of Interaction:</strong> Daily (reference), weekly, or monthly, influencing how often participants engage socially.</p>
-    <p><strong>Method of Interaction:</strong> In-person, virtual, or hybrid, reflecting user preferences, technology access, and mobility considerations.</p>
-    <p><strong>Duration of Each Interaction:</strong> 30 min (reference), 2-hour, or 4-hour sessions, affecting the depth of interactions and scheduling needs.</p>
-    <p><strong>Type of Support Programme:</strong> Peer support (reference), community engagement, psychological counselling, or VR-based sessions.</p>
+    <p><strong>Frequency of Interaction:</strong> Weekly or monthly, influencing how often participants engage socially.</p>
+    <p><strong>Method of Interaction:</strong> Virtual, hybrid (in-person &amp; virtual), reflecting user preferences, technology access, and mobility considerations.</p>
+    <p><strong>Duration of Each Interaction:</strong> 2-hour or 4-hour sessions, affecting the depth of interactions and scheduling needs.</p>
+    <p><strong>Type of Support Programme:</strong> Community engagement, psychological counselling, or VR-based sessions.</p>
   </div>
 
   <!-- Inputs Tab -->
   <div id="inputsTab" class="tabcontent">
     <h2>Programme Inputs</h2>
     <p>
-      Configure your scenario. Then click “Calculate &amp; View Results” for a new cost-benefit window, 
-      or “Show Probability Plot” under the “Program Uptake Probability” tab to see a dynamic bar chart.
+      Configure your scenario. Then click “Calculate &amp; View Results” to perform calculations and view cost-benefit analyses.
     </p>
     <form onsubmit="event.preventDefault();">
       <div class="form-grid">
@@ -118,7 +116,7 @@
         </div>
 
         <div class="form-item">
-          <label>
+          <label for="costSlider">
             Cost per Session (AUD): <span id="costLabel">50</span>
           </label>
           <input 
@@ -133,35 +131,57 @@
         </div>
 
         <div class="form-item">
-          <label><input type="checkbox" id="localCheck" />Local Area (12 km)</label>
+          <label>
+            <input type="checkbox" id="localCheck" /> Local Area (12 km)
+          </label>
           <br/>
-          <label><input type="checkbox" id="widerCheck" />Wider Community (50+ km)</label>
+          <label>
+            <input type="checkbox" id="widerCheck" /> Wider Community (50+ km)
+          </label>
         </div>
 
         <div class="form-item">
-          <label><input type="checkbox" id="weeklyCheck" />Weekly</label>
+          <label>
+            <input type="checkbox" id="weeklyCheck" /> Weekly
+          </label>
           <br/>
-          <label><input type="checkbox" id="monthlyCheck" />Monthly</label>
+          <label>
+            <input type="checkbox" id="monthlyCheck" /> Monthly
+          </label>
         </div>
 
         <div class="form-item">
-          <label><input type="checkbox" id="virtualCheck" />Virtual Only</label>
+          <label>
+            <input type="checkbox" id="virtualCheck" /> Virtual
+          </label>
           <br/>
-          <label><input type="checkbox" id="hybridCheck" />Hybrid (In-person &amp; Virtual)</label>
+          <label>
+            <input type="checkbox" id="hybridCheck" /> Hybrid (In-person &amp; Virtual)
+          </label>
         </div>
 
         <div class="form-item">
-          <label><input type="checkbox" id="twoHCheck" />2-Hour Session</label>
+          <label>
+            <input type="checkbox" id="twoHCheck" /> 2-hour Interaction
+          </label>
           <br/>
-          <label><input type="checkbox" id="fourHCheck" />4-Hour Session</label>
+          <label>
+            <input type="checkbox" id="fourHCheck" /> 4-hour Interaction
+          </label>
         </div>
 
         <div class="form-item">
-          <label><input type="checkbox" id="commCheck" />Community Engagement</label>
+          <label>
+            <input type="checkbox" id="commCheck" /> Community Engagement
+          </label>
           <br/>
-          <label><input type="checkbox" id="psychCheck" />Psychological Counselling</label>
+          <label>
+            <input type="checkbox" id="psychCheck" /> Psychological Counselling
+          </label>
           <br/>
-          <label><input type="checkbox" id="vrCheck" />Virtual Reality</label>
+          <label>
+            <input type="checkbox" id="vrCheck" /> Virtual Reality
+          </label>
         </div>
       </div>
       <div class="buttons-row">
@@ -174,9 +194,9 @@
   <div id="wtpTab" class="tabcontent">
     <h2>Willingness to Pay (WTP) Results</h2>
     <p>
-      The willingness-to-pay (WTP) for each program feature is calculated by taking the ratio 
-      of the feature’s coefficient to the negative of the cost coefficient. This metric 
-      quantifies the monetary value respondents place on each program feature, holding other 
+      The willingness-to-pay (WTP) for each programme attribute is calculated by taking the ratio 
+      of the attribute’s coefficient to the negative of the cost coefficient. This metric 
+      quantifies the monetary value respondents place on each programme attribute, holding other 
       factors constant.
     </p>
     <p>
@@ -186,19 +206,19 @@
       support scenario.
     </p>
     <div class="buttons-row">
-      <button onclick="renderWTPChart()">Show WTP Plot</button>
+      <button onclick="renderWTPChart()">Show WTP Plots</button>
     </div>
     <div class="chart-grid">
       <div class="chart-box">
-        <h3>WTP (A$)</h3>
+        <h3>WTP (A$) with Error Bars</h3>
         <canvas id="wtpChartMain"></canvas>
       </div>
     </div>
   </div>
 
-  <!-- Probability Plot Tab -->
+  <!-- Programme Uptake Probability Tab -->
   <div id="probTab" class="tabcontent">
-    <h2>Program Uptake Probability</h2>
+    <h2>Programme Uptake Probability</h2>
     <p>
       Click “Show Probability Plot” to compute a new bar chart based on your <strong>Inputs</strong>. 
       Depending on whether the predicted uptake is below 30%, between 30–70%, or above 70%, 
@@ -209,7 +229,7 @@
     </div>
     <div class="chart-grid">
       <div class="chart-box">
-        <h3>Program Uptake Probability</h3>
+        <h3>Programme Uptake Probability</h3>
         <canvas id="probChartMain"></canvas>
       </div>
     </div>
@@ -217,16 +237,21 @@
 
   <!-- Costs & Benefits Tab -->
   <div id="costsTab" class="tabcontent">
-    <h2>Cost Components &amp; Benefits</h2>
-    <p>
-      This tool assumes <strong>A$5,000</strong> per 1% improvement in programme uptake, but 
-      you might select a higher figure if your data suggests, for instance, A$7,500 better 
-      reflects the total health and social benefits of reduced loneliness.
-    </p>
-    <p>
-      Typical cost components include staff/personnel, facilities &amp; equipment, marketing, 
-      training, and operational expenses.
-    </p>
+    <h2>Costs &amp; Benefits</h2>
+    <div id="costsBenefitsContainer">
+      <div class="qaly-selector">
+        <label for="qalySelect">Select QALY Gain Scenario:</label>
+        <select id="qalySelect" onchange="renderCostsBenefits()">
+          <option value="low">Low (0.02 QALYs per participant)</option>
+          <option value="moderate" selected>Moderate (0.05 QALYs per participant)</option>
+          <option value="high">High (0.1 QALYs per participant)</option>
+        </select>
+      </div>
+      <div id="costsBenefitsResults">
+        <!-- Results will be injected here -->
+      </div>
+      <p><strong>Reference:</strong> Engel, L., Lee, Y. Y., Le, L. K. D., Lal, A., &amp; Mihalopoulos, C. (2021). Reducing loneliness to prevent depression in older adults in Australia: A modelled cost-effectiveness analysis. Mental Health and Prevention, 24. <a href="https://doi.org/10.1016/j.mhp.2021.200212" target="_blank">https://doi.org/10.1016/j.mhp.2021.200212</a>.</p>
+    </div>
   </div>
 
   <!-- Scenarios Tab -->
@@ -239,6 +264,7 @@
     <div class="buttons-row">
       <button onclick="saveScenario()">Save Current Scenario</button>
       <button onclick="openComparison()">Compare All Scenarios</button>
+      <button onclick="exportToPDF()">Export Comparison to PDF</button>
     </div>
     <table id="scenarioTable">
       <thead>
@@ -253,11 +279,11 @@
           <th>Monthly?</th>
           <th>Virtual?</th>
           <th>Hybrid?</th>
-          <th>2H?</th>
-          <th>4H?</th>
-          <th>Comm?</th>
-          <th>Psych?</th>
-          <th>VR?</th>
+          <th>2-Hour?</th>
+          <th>4-Hour?</th>
+          <th>Community Engagement?</th>
+          <th>Psychological Counselling?</th>
+          <th>Virtual Reality?</th>
         </tr>
       </thead>
       <tbody></tbody>
