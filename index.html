@@ -40,7 +40,7 @@
         <li><strong>Instructions</strong> – Guidance for each tool feature.</li>
         <li><strong>Attributes</strong> – Detailed descriptions of the DCE attributes.</li>
         <li><strong>Inputs</strong> – Configure your scenario’s cost, accessibility, frequency, etc.</li>
-        <li><strong>WTP Results</strong> – View a bar chart of main model willingness to pay (A$) with error bars.</li>
+        <li><strong>WTP Results</strong> – View a bar chart of main model willingness to pay (A$) with standard errors.</li>
         <li><strong>Program Uptake Probability</strong> – Dynamically computed chart based on your scenario inputs.</li>
         <li><strong>Costs &amp; Benefits</strong> – Outlines cost-of-living adjustments and assumptions for benefits.</li>
         <li><strong>Scenarios</strong> – Save multiple scenarios, compare them, or export PDF-based results.</li>
@@ -174,13 +174,16 @@
   <div id="wtpTab" class="tabcontent">
     <h2>Willingness to Pay (WTP) Results</h2>
     <p>
-      “Among the programme types, community engagement was the most highly valued, with a WTP of A$14.47 
-      (SE=3.31, p &lt; 0.001). This shows older adults are willing to pay an additional A$14.47 for 
-      community-based programmes, compared to the reference peer support scenario.”
+      The willingness-to-pay (WTP) for each program feature is calculated by taking the ratio 
+      of the feature’s coefficient to the negative of the cost coefficient. This metric 
+      quantifies the monetary value respondents place on each program feature, holding other 
+      factors constant.
     </p>
     <p>
-      Click “Show WTP Plot” for a bar chart. Error bars are included to reflect standard errors (SE) 
-      associated with each WTP estimate.
+      For example, among the programme types, community engagement is the most highly valued, 
+      with a WTP of A$14.47 (SE=3.31, p &lt; 0.001). This shows older adults are willing to pay 
+      an additional A$14.47 for community-based programmes, compared to the reference peer 
+      support scenario.
     </p>
     <div class="buttons-row">
       <button onclick="renderWTPChart()">Show WTP Plot</button>
@@ -198,8 +201,8 @@
     <h2>Program Uptake Probability</h2>
     <p>
       Click “Show Probability Plot” to compute a new bar chart based on your <strong>Inputs</strong>. 
-      If the chart indicates, for example, a 40% uptake probability, decision makers might consider 
-      adjusting programme attributes (like cost or frequency) to boost potential uptake.
+      Depending on whether the predicted uptake is below 30%, between 30–70%, or above 70%, 
+      you will see suggestions for adjustments in cost, accessibility, or frequency.
     </p>
     <div class="buttons-row">
       <button onclick="renderProbChart()">Show Probability Plot</button>
@@ -217,14 +220,12 @@
     <h2>Cost Components &amp; Benefits</h2>
     <p>
       This tool assumes <strong>A$5,000</strong> per 1% improvement in programme uptake, but 
-      you might choose an alternative. For instance, in your study’s context, 
-      you could adopt an estimate of <strong>A$7,500</strong> per 1% improvement 
-      if that figure more accurately reflects expected health savings and social benefits.
+      you might select a higher figure if your data suggests, for instance, A$7,500 better 
+      reflects the total health and social benefits of reduced loneliness.
     </p>
     <p>
-      Typical cost components include staff/personnel, facilities &amp; equipment, 
-      marketing, training, and other operational expenses. With <strong>more advanced cost-benefit logic</strong>, 
-      real cost data can replace placeholder calculations.
+      Typical cost components include staff/personnel, facilities &amp; equipment, marketing, 
+      training, and operational expenses.
     </p>
   </div>
 
