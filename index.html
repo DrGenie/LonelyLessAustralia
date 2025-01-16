@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>LonelyLessAustralia Decision Aid Tool</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -20,7 +20,7 @@
     <button class="tablink" onclick="openTab('attributesTab', this)">Attributes</button>
     <button class="tablink" onclick="openTab('inputsTab', this)">Inputs</button>
     <button class="tablink" onclick="openTab('wtpTab', this)">WTP Results</button>
-    <button class="tablink" onclick="openTab('probChartsTab', this)">Program Uptake Probability</button>
+    <button class="tablink" onclick="openTab('probTab', this)">Program Uptake Probability</button>
     <button class="tablink" onclick="openTab('costsTab', this)">Costs & Benefits</button>
     <button class="tablink" onclick="openTab('scenariosTab', this)">Scenarios</button>
   </div>
@@ -30,20 +30,22 @@
     <div class="intro-box">
       <p>
         Loneliness affects over five million Australians, especially older adults, resulting 
-        in serious health and economic burdens. This decision aid tool is based on a discrete 
-        choice experiment (DCE) that identified older adults’ preferences for programmes aimed 
-        at reducing loneliness in Australia. Using these DCE estimates, the tool 
-        predicts uptake probabilities for various programme packages, offering personalised 
-        services based on the factors older adults prioritise when seeking support.
+        in serious health and economic challenges. This decision aid tool leverages discrete 
+        choice experiment (DCE) estimates to predict programme uptake probabilities, enabling 
+        personalised services based on the attributes older adults deem most important.
       </p>
       <p>
-        The loneliness categories used in this study were derived from the 
-        <em>De Jong Gierveld Loneliness Scale</em> (11-item version), which measures emotional 
-        and social loneliness. Summing these yields a total loneliness score, subsequently 
-        classified into three levels—Not Lonely, Moderately Lonely, and Severely Lonely—for 
-        more nuanced comparisons across different severity categories.
+        Navigate with the tabs above:
       </p>
-      <p>Please use the tabs above to navigate.</p>
+      <ul>
+        <li><strong>Instructions</strong> – Guidance for each tool feature.</li>
+        <li><strong>Attributes</strong> – A detailed description of each DCE attribute.</li>
+        <li><strong>Inputs</strong> – Configure your scenario’s cost, accessibility, etc.</li>
+        <li><strong>WTP Results</strong> – A bar chart of willingness to pay (A$) for main model attributes, with optional p-values.</li>
+        <li><strong>Program Uptake Probability</strong> – Dynamically computed bar chart based on your scenario inputs.</li>
+        <li><strong>Costs &amp; Benefits</strong> – Outlines cost-of-living assumptions and A\$5,000 per 1% improvement.</li>
+        <li><strong>Scenarios</strong> – Save multiple scenarios, compare them, or export PDF-based results.</li>
+      </ul>
     </div>
   </div>
 
@@ -51,54 +53,58 @@
   <div id="instructionsTab" class="tabcontent">
     <h2>How to Use This Tool</h2>
     <p>
-      1. Read about <strong>Attributes</strong> for each programme dimension.
+      1. Check the <strong>Attributes</strong> tab to understand each dimension of the programme.
     </p>
     <p>
-      2. In <strong>Inputs</strong>, select your state, cost-of-living, cost per session, 
-      accessibility, frequency, method, duration, and type of support. 
+      2. On the <strong>Inputs</strong> tab, choose your state (optional), cost-of-living multipliers, cost per session, 
+      accessibility (local/wider), frequency (weekly/monthly), method (virtual/hybrid), duration (2H/4H), 
+      and support type (community engagement, counselling, VR).
     </p>
     <p>
-      3. Click “Calculate &amp; View Results” to open detailed cost-benefit charts, 
-      predicted probabilities, and optional PDF exports in a new window.
+      3. Click “Calculate &amp; View Results” to open a new window with cost-benefit charts, 
+      predicted programme uptake, and PDF export possibilities.
     </p>
     <p>
-      4. Save your scenario in the <strong>Scenarios</strong> tab to compare multiple 
-      configurations side by side.
+      4. The <strong>WTP Results</strong> tab displays a bar chart for the main model’s WTP (A$). 
     </p>
     <p>
-      5. The <strong>WTP Results</strong> tab shows bar charts for willingness to pay, 
-      for both the main model and each loneliness category.
+      5. The <strong>Program Uptake Probability</strong> tab displays a bar chart for your scenario’s predicted 
+      programme uptake. Refresh it after changes to the <strong>Inputs</strong> tab.
     </p>
     <p>
-      6. The <strong>Program Uptake Probability</strong> tab displays bar charts 
-      illustrating predicted probabilities for your current inputs (main model and by loneliness group).
+      6. <strong>Costs &amp; Benefits</strong> summarises the A\$5,000 per 1% improvement assumption and relevant cost items.
     </p>
     <p>
-      7. The <strong>Costs &amp; Benefits</strong> tab explains cost-of-living 
-      assumptions and the A\$5,000 per 1% improvement benefit baseline.
+      7. Under <strong>Scenarios</strong>, you can save or compare multiple configurations side by side.
     </p>
   </div>
 
   <!-- Attributes Tab -->
   <div id="attributesTab" class="tabcontent">
     <h2>Programme Attributes</h2>
-    <p><strong>Cost:</strong> Out-of-pocket cost per session for participants.</p>
-    <p><strong>Accessibility:</strong> Local area vs. wider community (distance & mobility constraints).</p>
-    <p><strong>Frequency of Interaction:</strong> Daily reference, weekly, monthly, etc.</p>
-    <p><strong>Method of Interaction:</strong> In-person, virtual-only, or hybrid approach.</p>
-    <p><strong>Duration of Each Interaction:</strong> 30 minutes (reference), 2 hours, 4 hours, etc.</p>
-    <p><strong>Type of Support Programme:</strong> Peer support, community engagement, counselling, VR, etc.</p>
+    <p><strong>Cost per session:</strong> The out-of-pocket fee (in AUD) that participants pay each time they attend.</p>
+    <p><strong>Accessibility:</strong> Whether the programme is local (up to 12 km) or in a wider community (50+ km), 
+      affecting participants' travel, time, and mobility constraints.</p>
+    <p><strong>Frequency of Interaction:</strong> The DCE reference is daily; alternatives are weekly or monthly, 
+      impacting how often participants engage socially and the intensity of their interactions.</p>
+    <p><strong>Method of Interaction:</strong> In-person, fully virtual, or a hybrid approach, catering for different 
+      mobility and technology preferences.</p>
+    <p><strong>Duration of Each Interaction:</strong> 30 minutes as a reference, or 2-hour/4-hour sessions, which 
+      can alter the depth of engagement, tiredness, or scheduling needs.</p>
+    <p><strong>Type of Support Programme:</strong> Ranging from peer support (reference) to community engagement, 
+      psychological counselling, or VR, each providing varied social and mental health benefits.</p>
   </div>
 
   <!-- Inputs Tab -->
   <div id="inputsTab" class="tabcontent">
     <h2>Programme Inputs</h2>
-    <p>Set your scenario’s attributes below, then click “Calculate &amp; View Results” to open a new window with cost-benefit charts and probabilities.</p>
-
-    <form id="inputsForm" onsubmit="event.preventDefault();">
+    <p>
+      Configure your scenario. Then click “Calculate &amp; View Results” to open a new window 
+      with cost-benefit analyses. Or use the “Program Uptake Probability” tab to directly view 
+      a bar chart reflecting your current selections.
+    </p>
+    <form onsubmit="event.preventDefault();">
       <div class="form-grid">
-        
-        <!-- State + Cost-of-Living -->
         <div class="form-item">
           <label for="state_select">State:</label>
           <select id="state_select">
@@ -120,9 +126,8 @@
           </select>
         </div>
 
-        <!-- Cost Slider -->
         <div class="form-item">
-          <label for="costSlider">
+          <label>
             Cost per Session (AUD): <span id="costLabel">50</span>
           </label>
           <input 
@@ -136,35 +141,30 @@
           />
         </div>
 
-        <!-- Accessibility -->
         <div class="form-item">
           <label><input type="checkbox" id="localCheck" />Local Area (12 km)</label>
           <br/>
           <label><input type="checkbox" id="widerCheck" />Wider Community (50+ km)</label>
         </div>
 
-        <!-- Frequency -->
         <div class="form-item">
           <label><input type="checkbox" id="weeklyCheck" />Weekly</label>
           <br/>
           <label><input type="checkbox" id="monthlyCheck" />Monthly</label>
         </div>
 
-        <!-- Method -->
         <div class="form-item">
           <label><input type="checkbox" id="virtualCheck" />Virtual Only</label>
           <br/>
           <label><input type="checkbox" id="hybridCheck" />Hybrid (In-person &amp; Virtual)</label>
         </div>
 
-        <!-- Duration -->
         <div class="form-item">
           <label><input type="checkbox" id="twoHCheck" />2-Hour Session</label>
           <br/>
           <label><input type="checkbox" id="fourHCheck" />4-Hour Session</label>
         </div>
 
-        <!-- Programme Type -->
         <div class="form-item">
           <label><input type="checkbox" id="commCheck" />Community Engagement</label>
           <br/>
@@ -172,7 +172,6 @@
           <br/>
           <label><input type="checkbox" id="vrCheck" />Virtual Reality</label>
         </div>
-
       </div>
       <div class="buttons-row">
         <button type="button" onclick="openSingleScenario()">Calculate &amp; View Results</button>
@@ -184,57 +183,41 @@
   <div id="wtpTab" class="tabcontent">
     <h2>Willingness to Pay (WTP) Results</h2>
     <p>
-      Click “Show WTP Plots” to load bar charts displaying WTP for the main model and each loneliness category.
+      “Among the programme types, community engagement was the most highly valued, with a WTP of A$14.47 
+      (SE=3.31, p &lt; 0.001). This indicates that older adults are willing to pay A$14.47 for programmes 
+      fostering social interaction and community connections, relative to the reference category of peer 
+      support.”
+    </p>
+    <p>
+      Click “Show WTP Plot” to display the bar chart of the main model’s WTP (A$). We have incorporated 
+      placeholders for p-values and standard errors in the data, which could be used to overlay error bars.
     </p>
     <div class="buttons-row">
-      <button onclick="renderWTPCharts()">Show WTP Plots</button>
+      <button onclick="renderWTPChart()">Show WTP Plot</button>
     </div>
     <div class="chart-grid">
       <div class="chart-box">
-        <h3>Main Model</h3>
+        <h3>WTP (A$)</h3>
         <canvas id="wtpChartMain"></canvas>
-      </div>
-      <div class="chart-box">
-        <h3>Not Lonely</h3>
-        <canvas id="wtpChartNotLonely"></canvas>
-      </div>
-      <div class="chart-box">
-        <h3>Moderately Lonely</h3>
-        <canvas id="wtpChartModLonely"></canvas>
-      </div>
-      <div class="chart-box">
-        <h3>Severely Lonely</h3>
-        <canvas id="wtpChartSevLonely"></canvas>
       </div>
     </div>
   </div>
 
-  <!-- Probability Plots Tab -->
-  <div id="probChartsTab" class="tabcontent">
+  <!-- Probability Plot Tab -->
+  <div id="probTab" class="tabcontent">
     <h2>Program Uptake Probability</h2>
     <p>
-      Click “Show Program Probability Uptake Plots” to compute and display bar charts of 
-      predicted programme uptake for your current inputs: main model and each loneliness category.
+      Press “Show Probability Plot” to recalculate and display a bar chart of your scenario’s predicted 
+      programme uptake. For instance, if this chart shows 60%, that suggests <strong>older adults have 
+      a 60% chance</strong> of preferring this programme—given its attributes—over an opt-out alternative.
     </p>
     <div class="buttons-row">
-      <button onclick="renderProbCharts()">Show Program Probability Uptake Plots</button>
+      <button onclick="renderProbChart()">Show Probability Plot</button>
     </div>
     <div class="chart-grid">
       <div class="chart-box">
-        <h3>Main Model Probability</h3>
+        <h3>Program Uptake Probability</h3>
         <canvas id="probChartMain"></canvas>
-      </div>
-      <div class="chart-box">
-        <h3>Not Lonely</h3>
-        <canvas id="probChartNotLonely"></canvas>
-      </div>
-      <div class="chart-box">
-        <h3>Moderately Lonely</h3>
-        <canvas id="probChartModLonely"></canvas>
-      </div>
-      <div class="chart-box">
-        <h3>Severely Lonely</h3>
-        <canvas id="probChartSevLonely"></canvas>
       </div>
     </div>
   </div>
@@ -243,15 +226,15 @@
   <div id="costsTab" class="tabcontent">
     <h2>Cost Components &amp; Benefits</h2>
     <p>
-      We assume <strong>A\$5,000</strong> for each 1% improvement in programme uptake, and 
-      cost-of-living multipliers by state if selected. Costs typically include:
+      This tool assumes a <strong>A\$5,000</strong> benefit for every 1% increase in programme uptake, plus 
+      cost-of-living adjustments if state-based multipliers are selected. Typical costs include:
     </p>
     <ul>
-      <li>Staff/Personnel</li>
-      <li>Facilities &amp; Equipment</li>
-      <li>Marketing &amp; Outreach</li>
-      <li>Training &amp; Certification</li>
-      <li>Miscellaneous Operational Expenses</li>
+      <li>Personnel (staff salaries, volunteer training)</li>
+      <li>Facilities &amp; Equipment (rental, IT, maintenance)</li>
+      <li>Marketing &amp; Outreach (advertising, community events)</li>
+      <li>Training &amp; Certification (seminars, workshops)</li>
+      <li>Miscellaneous Operational Expenses (transport, refreshments, admin)</li>
     </ul>
   </div>
 
@@ -259,8 +242,8 @@
   <div id="scenariosTab" class="tabcontent">
     <h2>Saved Scenarios</h2>
     <p>
-      Save your current scenario under <strong>Inputs</strong>, then compare multiple 
-      scenarios with advanced cost-benefit charts or PDF exports.
+      Save your scenario (from <strong>Inputs</strong>) and compare or export multiple configurations, 
+      including cost-benefit charts, in PDF form if desired.
     </p>
     <div class="buttons-row">
       <button onclick="saveScenario()">Save Current Scenario</button>
