@@ -29,21 +29,20 @@
   <div id="introTab" class="tabcontent" style="display: block;">
     <div class="intro-box">
       <p>
-        Loneliness affects over five million Australians, especially older adults, resulting 
-        in serious health and economic challenges. This decision aid tool leverages discrete 
-        choice experiment (DCE) estimates to predict programme uptake probabilities, enabling 
-        personalised services based on the attributes older adults deem most important.
+        Loneliness affects over five million Australians, especially older adults, 
+        resulting in significant health and economic challenges. This tool uses 
+        discrete choice experiment (DCE) estimates to predict programme uptake 
+        probabilities, enabling personalised services based on the attributes older 
+        adults consider most crucial.
       </p>
-      <p>
-        Navigate with the tabs above:
-      </p>
+      <p>Use the tabs above to navigate:</p>
       <ul>
         <li><strong>Instructions</strong> – Guidance for each tool feature.</li>
-        <li><strong>Attributes</strong> – A detailed description of each DCE attribute.</li>
-        <li><strong>Inputs</strong> – Configure your scenario’s cost, accessibility, etc.</li>
-        <li><strong>WTP Results</strong> – A bar chart of willingness to pay (A$) for main model attributes, with optional p-values.</li>
-        <li><strong>Program Uptake Probability</strong> – Dynamically computed bar chart based on your scenario inputs.</li>
-        <li><strong>Costs &amp; Benefits</strong> – Outlines cost-of-living assumptions and A\$5,000 per 1% improvement.</li>
+        <li><strong>Attributes</strong> – Detailed descriptions of the DCE attributes.</li>
+        <li><strong>Inputs</strong> – Configure your scenario’s cost, accessibility, frequency, etc.</li>
+        <li><strong>WTP Results</strong> – View a bar chart of main model willingness to pay (A$) with error bars.</li>
+        <li><strong>Program Uptake Probability</strong> – Dynamically computed chart based on your scenario inputs.</li>
+        <li><strong>Costs &amp; Benefits</strong> – Outlines cost-of-living adjustments and assumptions for benefits.</li>
         <li><strong>Scenarios</strong> – Save multiple scenarios, compare them, or export PDF-based results.</li>
       </ul>
     </div>
@@ -53,55 +52,47 @@
   <div id="instructionsTab" class="tabcontent">
     <h2>How to Use This Tool</h2>
     <p>
-      1. Check the <strong>Attributes</strong> tab to understand each dimension of the programme.
+      1. Check <strong>Attributes</strong> to understand cost, accessibility, frequency, method, duration, and support types.
     </p>
     <p>
-      2. On the <strong>Inputs</strong> tab, choose your state (optional), cost-of-living multipliers, cost per session, 
-      accessibility (local/wider), frequency (weekly/monthly), method (virtual/hybrid), duration (2H/4H), 
-      and support type (community engagement, counselling, VR).
+      2. Under <strong>Inputs</strong>, select your state (if any), whether to adjust for cost-of-living, cost per session, 
+      local vs. wider community, weekly vs. monthly, virtual vs. hybrid, session duration, and support type.
     </p>
     <p>
-      3. Click “Calculate &amp; View Results” to open a new window with cost-benefit charts, 
-      predicted programme uptake, and PDF export possibilities.
+      3. Click “Calculate &amp; View Results” to open a new window with cost-benefit charts and an optional PDF export. 
     </p>
     <p>
-      4. The <strong>WTP Results</strong> tab displays a bar chart for the main model’s WTP (A$). 
+      4. The <strong>WTP Results</strong> tab displays a bar chart summarising the main model’s willingness to pay (A$) for each attribute.
     </p>
     <p>
-      5. The <strong>Program Uptake Probability</strong> tab displays a bar chart for your scenario’s predicted 
-      programme uptake. Refresh it after changes to the <strong>Inputs</strong> tab.
+      5. The <strong>Program Uptake Probability</strong> tab offers a bar chart for the predicted programme uptake under your current scenario.
     </p>
     <p>
-      6. <strong>Costs &amp; Benefits</strong> summarises the A\$5,000 per 1% improvement assumption and relevant cost items.
+      6. The <strong>Costs &amp; Benefits</strong> tab introduces A$5,000 per 1% improvement as a baseline, with suggestions for an alternative.
     </p>
     <p>
-      7. Under <strong>Scenarios</strong>, you can save or compare multiple configurations side by side.
+      7. Under <strong>Scenarios</strong>, save multiple configurations, compare them side by side, or export your results to PDF.
     </p>
   </div>
 
   <!-- Attributes Tab -->
   <div id="attributesTab" class="tabcontent">
     <h2>Programme Attributes</h2>
-    <p><strong>Cost per session:</strong> The out-of-pocket fee (in AUD) that participants pay each time they attend.</p>
+    <p><strong>Cost per session:</strong> The out-of-pocket fee (AUD) that participants must pay every time they attend.</p>
     <p><strong>Accessibility:</strong> Whether the programme is local (up to 12 km) or in a wider community (50+ km), 
-      affecting participants' travel, time, and mobility constraints.</p>
-    <p><strong>Frequency of Interaction:</strong> The DCE reference is daily; alternatives are weekly or monthly, 
-      impacting how often participants engage socially and the intensity of their interactions.</p>
-    <p><strong>Method of Interaction:</strong> In-person, fully virtual, or a hybrid approach, catering for different 
-      mobility and technology preferences.</p>
-    <p><strong>Duration of Each Interaction:</strong> 30 minutes as a reference, or 2-hour/4-hour sessions, which 
-      can alter the depth of engagement, tiredness, or scheduling needs.</p>
-    <p><strong>Type of Support Programme:</strong> Ranging from peer support (reference) to community engagement, 
-      psychological counselling, or VR, each providing varied social and mental health benefits.</p>
+      factoring in mobility, transport cost, and convenience.</p>
+    <p><strong>Frequency of Interaction:</strong> Daily (reference), weekly, or monthly, influencing how often participants engage socially.</p>
+    <p><strong>Method of Interaction:</strong> In-person, virtual, or hybrid, reflecting user preferences, technology access, and mobility considerations.</p>
+    <p><strong>Duration of Each Interaction:</strong> 30 min (reference), 2-hour, or 4-hour sessions, affecting the depth of interactions and scheduling needs.</p>
+    <p><strong>Type of Support Programme:</strong> Peer support (reference), community engagement, psychological counselling, or VR-based sessions.</p>
   </div>
 
   <!-- Inputs Tab -->
   <div id="inputsTab" class="tabcontent">
     <h2>Programme Inputs</h2>
     <p>
-      Configure your scenario. Then click “Calculate &amp; View Results” to open a new window 
-      with cost-benefit analyses. Or use the “Program Uptake Probability” tab to directly view 
-      a bar chart reflecting your current selections.
+      Configure your scenario. Then click “Calculate &amp; View Results” for a new cost-benefit window, 
+      or “Show Probability Plot” under the “Program Uptake Probability” tab to see a dynamic bar chart.
     </p>
     <form onsubmit="event.preventDefault();">
       <div class="form-grid">
@@ -184,13 +175,12 @@
     <h2>Willingness to Pay (WTP) Results</h2>
     <p>
       “Among the programme types, community engagement was the most highly valued, with a WTP of A$14.47 
-      (SE=3.31, p &lt; 0.001). This indicates that older adults are willing to pay A$14.47 for programmes 
-      fostering social interaction and community connections, relative to the reference category of peer 
-      support.”
+      (SE=3.31, p &lt; 0.001). This shows older adults are willing to pay an additional A$14.47 for 
+      community-based programmes, compared to the reference peer support scenario.”
     </p>
     <p>
-      Click “Show WTP Plot” to display the bar chart of the main model’s WTP (A$). We have incorporated 
-      placeholders for p-values and standard errors in the data, which could be used to overlay error bars.
+      Click “Show WTP Plot” for a bar chart. Error bars are included to reflect standard errors (SE) 
+      associated with each WTP estimate.
     </p>
     <div class="buttons-row">
       <button onclick="renderWTPChart()">Show WTP Plot</button>
@@ -207,9 +197,9 @@
   <div id="probTab" class="tabcontent">
     <h2>Program Uptake Probability</h2>
     <p>
-      Press “Show Probability Plot” to recalculate and display a bar chart of your scenario’s predicted 
-      programme uptake. For instance, if this chart shows 60%, that suggests <strong>older adults have 
-      a 60% chance</strong> of preferring this programme—given its attributes—over an opt-out alternative.
+      Click “Show Probability Plot” to compute a new bar chart based on your <strong>Inputs</strong>. 
+      If the chart indicates, for example, a 40% uptake probability, decision makers might consider 
+      adjusting programme attributes (like cost or frequency) to boost potential uptake.
     </p>
     <div class="buttons-row">
       <button onclick="renderProbChart()">Show Probability Plot</button>
@@ -226,24 +216,24 @@
   <div id="costsTab" class="tabcontent">
     <h2>Cost Components &amp; Benefits</h2>
     <p>
-      This tool assumes a <strong>A\$5,000</strong> benefit for every 1% increase in programme uptake, plus 
-      cost-of-living adjustments if state-based multipliers are selected. Typical costs include:
+      This tool assumes <strong>A$5,000</strong> per 1% improvement in programme uptake, but 
+      you might choose an alternative. For instance, in your study’s context, 
+      you could adopt an estimate of <strong>A$7,500</strong> per 1% improvement 
+      if that figure more accurately reflects expected health savings and social benefits.
     </p>
-    <ul>
-      <li>Personnel (staff salaries, volunteer training)</li>
-      <li>Facilities &amp; Equipment (rental, IT, maintenance)</li>
-      <li>Marketing &amp; Outreach (advertising, community events)</li>
-      <li>Training &amp; Certification (seminars, workshops)</li>
-      <li>Miscellaneous Operational Expenses (transport, refreshments, admin)</li>
-    </ul>
+    <p>
+      Typical cost components include staff/personnel, facilities &amp; equipment, 
+      marketing, training, and other operational expenses. With <strong>more advanced cost-benefit logic</strong>, 
+      real cost data can replace placeholder calculations.
+    </p>
   </div>
 
   <!-- Scenarios Tab -->
   <div id="scenariosTab" class="tabcontent">
     <h2>Saved Scenarios</h2>
     <p>
-      Save your scenario (from <strong>Inputs</strong>) and compare or export multiple configurations, 
-      including cost-benefit charts, in PDF form if desired.
+      Save your scenario from <strong>Inputs</strong> and compare or export multiple configurations, 
+      including cost-benefit charts, to PDF.
     </p>
     <div class="buttons-row">
       <button onclick="saveScenario()">Save Current Scenario</button>
